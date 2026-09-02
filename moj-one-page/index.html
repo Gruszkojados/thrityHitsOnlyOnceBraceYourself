@@ -23,12 +23,17 @@
 
     body {
       min-height: 100vh;
-      background: var(--desktop);
+      
       color: #000;
       font-family: "MS Sans Serif", Tahoma, Arial, sans-serif;
       font-size: 13px;
       overflow-x: hidden;
       padding-bottom: 34px;
+      background-image: url("images/xp-wallpaper.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
 
     button, input { font: inherit; }
@@ -158,7 +163,7 @@
 
     .bg-browser {
       position: absolute;
-      opacity: .93;
+      opacity: 1;
       transform: none !important;
       overflow: hidden;
     }
@@ -228,11 +233,13 @@
       font: bold 11px/1.35 "Courier New", monospace;
     }
 
-    .bg1 { left: 145px; top: 48px; width: 500px; height: 400px; }
+    .bg1 { left: 200px; top: 48px; width: 500px; height: 400px; }
     .bg2 { right: 45px; top: 78px; width: 650px; height: 600px; }
     .bg3 { left: 300px; top: 470px; width: 810px; height: 475px; }
     .bg4 { right: 300px; top: 540px; width: 600px; height: 400px; }
-    .bg5 { left: 20px; top: 455px; width: 200px; height: 300px; }
+    .bg5 { left: 20px; top: 600px; width: 200px; height: 300px; }
+    .bg6 { right: -30px; top: 100px; width: 600px; height: 600px; }
+    .bg7 { left: 100px; top: 100px; width: 600px; height: 600px; }
 
     /* ---------- okno błędu uruchamianego z menu Start ---------- */
     .error-window {
@@ -282,7 +289,7 @@
     .main-browser {
       position: relative;
       z-index: 10;
-      width: min(900px, calc(100% - 125px));
+      width: min(700px, calc(100% - 125px));
       margin: 0 auto;
     }
 
@@ -424,7 +431,7 @@
     .list-window {
       position: relative;
       z-index: 10;
-      width: min(1100px, calc(100% - 100px));
+      width: min(900px, calc(100% - 100px));
       margin: 25px auto 0;
     }
 
@@ -468,6 +475,18 @@
       background: #fff;
       padding: 7px;
       border: 2px solid;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    .items-list2 {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #fff;
+      padding: 7px;
       border-top-color: #808080;
       border-left-color: #808080;
       border-right-color: #fff;
@@ -867,9 +886,28 @@
         </div>
         <div class="browser-body">
           <div class="fake-address">http://jak dojade na impreze.com</div>
-          <div class="jpg-view jpg-link" onclick="window.open('https://maps.app.goo.gl/YfvYEE5KZDanVs9W9', '_blank')"></div>
+          <div class="jpg-view jpg-link" onclick="window.open('https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/', '_blank')"></div>
         </div>
       </div>
+
+      <div class="bg-browser bg6 saper">
+        <iframe src="saper.html"
+          width="430"
+          height="570"
+          style="border:0"
+          title="Saper Windows 98">
+        </iframe>
+      </div>
+
+      <div class="bg-browser bg7">
+        <iframe src="media.html"
+          width="430"
+          height="570"
+          style="border:0"
+          title="Media Player">
+        </iframe>
+      </div>
+
     </div>
     
 
@@ -966,7 +1004,7 @@
     <main class="window list-window" id="lista">
       <div class="title-bar">
         <div class="title-icon">☷</div>
-        <div class="title-text">Mój Komputer \ Lista potrzebnych rzeczy</div>
+        <div class="title-text">Mój Komputer \ Lista potrzebnych/przydatnych rzeczy</div>
         <div class="window-buttons">
           <button class="win-btn">_</button>
           <button class="win-btn">□</button>
@@ -1017,6 +1055,63 @@
           <div class="status">Prędkość: <span id="speed-value">1.00×</span> · kółko myszy zmienia tempo</div>
         </div>
       </div>
+    </main>
+
+     <!-- =====================================================
+         Potrzebne informacje
+         ===================================================== -->
+    <main class="window list-window" id="lista">
+      <div class="title-bar">
+        <div class="title-icon">📝</div>
+        <div class="title-text">Notatnik \ Przydatne informacje</div>
+        <div class="window-buttons">
+          <button class="win-btn spawn-trigger">_</button>
+          <button class="win-btn spawn-trigger">□</button>
+          <button class="win-btn spawn-trigger">×</button>
+        </div>
+      </div>
+
+      <div class="window-content">
+        <div class="menu-bar">
+        <span class="spawn-trigger">Plik</span>
+        <span class="spawn-trigger">Edycja</span>
+        <span class="spawn-trigger">Widok</span>
+        <span class="spawn-trigger">Ulubione</span>
+        <span class="spawn-trigger">Narzędzia</span>
+        <span class="spawn-trigger">Pomoc</span>
+      </div>
+      </div>
+
+      <div style="padding: 10px; background-color: #ffffff; max-height: 200px; overflow-y: auto;">
+        <div class="items-list2">
+          <div>
+
+          <div>
+            <b>Kiedy</b> <br>
+              <pre>    od Piątku 9.10.2026 od godziny 16:00 (najwcześniej) </pre><br>
+              <pre>    do Niedzieli 11.10.2026 do godziny 11:00 (najpóźniej) </pre><br>
+          </div>
+          <div>
+            <b>Gdzie</b> <br>
+              <pre>    Borsk 194, 83-441 Borsk </pre><br>
+              <button style="padding: 2px; margin: 3px; margin-left: 4px;" onclick="window.open('https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/', '_blank')">
+                Otwórz w Google Maps
+              </button>
+            </div>
+          </div>
+        <b>Sekcja Q&A</b> <br>
+
+          </div>
+
+        
+
+        
+      </div>
+        
+        
+        
+      </div>
+
     </main>
 
     <!-- Okno informacji -->
