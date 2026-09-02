@@ -1,0 +1,14 @@
+[
+  { "id": 1, "text": "Zainstalować Node.js oraz Vite" },
+  { "id": 2, "text": "Skonfigurować skrypt wdrażania gh-pages" },
+  { "id": 3, "text": "Przenieść listę zadań do zewnętrznego pliku JSON" },
+  { "id": 4, "text": "Dodać asynchroniczne pobieranie danych za pomocą fetch()" },
+  { "id": 5, "text": "Przetestować odbijanie się elementu na ekranie" },
+  { "id": 6, "text": "Opublikować gotową stronę na GitHub Pages" },
+  { "id": 7, "text": "Zainstalować Node.js oraz Vite" },
+  { "id": 8, "text": "Skonfigurować skrypt wdrażania gh-pages" },
+  { "id": 9, "text": "Przenieść listę zadań do zewnętrznego pliku JSON" },
+  { "id": 10, "text": "Dodać asynchroniczne pobieranie danych za pomocą fetch()" },
+  { "id": 11, "text": "Przetestować odbijanie się elementu na ekranie" },
+  { "id": 12, "text": "Opublikować gotową stronę na GitHub Pages" }
+]
