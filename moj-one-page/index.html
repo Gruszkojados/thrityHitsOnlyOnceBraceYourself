@@ -1151,7 +1151,7 @@
       const container = document.getElementById("json-items-container");
 
       try {
-        const response = await fetch("./data.json", { cache: "no-store" });
+        const response = await fetch("./public/data.json", { cache: "no-store" });
 
         if (!response.ok) {
           throw new Error("HTTP " + response.status);
