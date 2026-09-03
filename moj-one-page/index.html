@@ -38,6 +38,10 @@
 
     button, input { font: inherit; }
 
+	.hidden {
+  		display: none !important;
+	}
+
     /* ---------- klasyczne okno ---------- */
     .window {
       background: var(--gray);
@@ -105,6 +109,20 @@
       border-right-color: #fff;
       border-bottom-color: #fff;
     }
+
+	.ggpic {
+		/* Upewnij się, że div ma zdefiniowaną szerokość i wysokość */
+		width: 100%;  /* Przykładowa wielkość */
+		height: 100%; /* Przykładowa wielkość */
+		overflow: hidden; /* Opcjonalnie: ucina wszystko, co wystaje poza div */
+		cursor: pointer;
+	}
+
+	.ggpic img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover; /* Sprawia, że zdjęcie wypełnia div bez zniekształceń (może je lekko przyciąć) */
+	}
 
     /* ---------- pulpit ---------- */
     .desktop {
@@ -353,6 +371,25 @@
       gap: 6px;
       padding: 4px 7px;
       border-bottom: 1px solid #808080;
+    }
+
+    a {
+      font-weight: bold;
+      color: #2563eb;
+      text-decoration: none;
+      transition: 0.2s;
+      display: inline-block; /* Wymagane, aby transformacja zadziałała */
+    }
+
+    a:hover {
+      color: #1d4ed8;
+      transform: translateY(-2px); /* Delikatny skok w górę */
+    }
+
+    .gk {
+      border: dotted 1px black; 
+      margin: 2px; 
+      padding: 2px;
     }
 
     .address {
@@ -798,6 +835,18 @@
       text-overflow: ellipsis;
     }
 
+	#media-player {
+		display: none;
+	}
+
+	#mediaButton {
+		cursor: pointer;
+	}
+
+	#saperWindow {
+		display: none;
+	}
+
     .clock {
       margin-left: auto;
       min-width: 72px;
@@ -890,7 +939,7 @@
         </div>
       </div>
 
-      <div class="bg-browser bg6 saper">
+      <div class="bg-browser bg6 saper" id="saperWindow">
         <iframe src="saper.html"
           width="430"
           height="570"
@@ -899,7 +948,7 @@
         </iframe>
       </div>
 
-      <div class="bg-browser bg7">
+      <div class="bg-browser bg7" id="media-player">
         <iframe src="media.html"
           width="430"
           height="570"
@@ -910,9 +959,6 @@
 
     </div>
     
-
-      
-
     <!-- =====================================================
          IKONY PULPITU — KAŻDA TWORZY LOSOWY LATAJĄCY PNG
          ===================================================== -->
@@ -1060,59 +1106,95 @@
      <!-- =====================================================
          Potrzebne informacje
          ===================================================== -->
-    <main class="window list-window" id="lista">
-      <div class="title-bar">
-        <div class="title-icon">📝</div>
-        <div class="title-text">Notatnik \ Przydatne informacje</div>
-        <div class="window-buttons">
-          <button class="win-btn spawn-trigger">_</button>
-          <button class="win-btn spawn-trigger">□</button>
-          <button class="win-btn spawn-trigger">×</button>
-        </div>
-      </div>
+	<main class="window list-window" id="lista">
+		<div class="title-bar">
+			<div class="title-icon">📝</div>
+			<div class="title-text">Notatnik \ Przydatne informacje</div>
+			<div class="window-buttons">
+				<button class="win-btn spawn-trigger">_</button>
+				<button class="win-btn spawn-trigger">□</button>
+				<button class="win-btn spawn-trigger">×</button>
+			</div>
+		</div>
+	
+		<div class="window-content">
+			<div class="menu-bar">
+				<span class="spawn-trigger">Plik</span>
+				<span class="spawn-trigger">Edycja</span>
+				<span class="spawn-trigger">Widok</span>
+				<span class="spawn-trigger">Ulubione</span>
+				<span class="spawn-trigger">Narzędzia</span>
+				<span class="spawn-trigger">Pomoc</span>
+			</div>
+		</div>
+	
+		<div style="padding: 10px; background-color: #ffffff; max-height: 200px; overflow-y: auto;">
+			<div class="items-list2">
+	
+	
+			<div class="gk">
+				<b>Kiedy</b> <br>
+				<pre>    od Piątku 9.10.2026 od godziny 16:00 (najwcześniej) </pre><br>
+				<pre>    do Niedzieli 11.10.2026 do godziny 11:00 (najpóźniej) </pre><br>
+			</div>
+	
+			<div class="gk">
+				<b>Gdzie</b> <br> <br>
+				<pre>    <a href="https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/" target="_blank">Borsk 194, 83-441 Borsk</a></pre>
+				<br>
+			</div>
+	
+			<div class="gk">
+				<b>Kilka podstawowych zasad</b> <br> <br>
+				<p>
+					W obiekcie obowiązuje cisza nocna w godzinach 23-9.
+					Mam ogromną prośbę o przyzwoite zachowanie, żeby nie robić trzody i się nie napierdolić jak świnia!
+					Postarajmy się
+					niczego nie zniszczyć.
+					Mam nadzieję że po prostu spędzimy razem fajny weekend 😁
+				</p> <br>
+			</div>
 
-      <div class="window-content">
-        <div class="menu-bar">
-        <span class="spawn-trigger">Plik</span>
-        <span class="spawn-trigger">Edycja</span>
-        <span class="spawn-trigger">Widok</span>
-        <span class="spawn-trigger">Ulubione</span>
-        <span class="spawn-trigger">Narzędzia</span>
-        <span class="spawn-trigger">Pomoc</span>
-      </div>
-      </div>
+			
+			<div class="gk">
+				<b>Sekcja Q&A</b> <br> <br>
+				
+				<b>Czy mam wziąć coś do jedzenia?</b> <br> <br>
+				<p>
+					Tak, weź ze sobą to co tylko zechcesz zjeść. W domkach są małe lodówki z zamrażarką. Jest kuchenka
+					indukcyjna i
+					mikrofalówka.
+					Jednak nie musisz przesadzać, mam w planie zorganizować śniadania oraz obiadokolacje, także postaram się aby
+					niczego nie zabrakło 😉
+					Mam nadzieję, że uda się zorganizować ognisko lub grill.
+				</p> <br>
+				
+				<b>Czy mam zabrać ze sobą śpiwór lub jakiś inny element do spania (poduszka, koc ...)?</b> <br> <br>
+				<p>
+					Byłoby dobrze aby każdy zabrał ze sobą coś dodatkowego do spania, w domkach są kołdry i pościele ale z uwagi
+					na to,
+					będzie to już październik, może być chłodno.
+					Na szczeście w domkach jest klmiatyzacja którą można dogrzać domki ale lepiej zabrać ze sobą więcej niż
+					mniej.
+				</p> <br>
+				
+				<b>Co z dojazdem na miejsce?</b> <br> <br>
+				<p>
+					Niestety dojazd musisz ogarnąć samodzielnie, nie mam możliwości aby kogoś podwieźć. 
+					Najlepiej zgadać sie w kilka osób i jechać razem.
+					Druga sprawa to słaby dojazd pociągiem lub autobusem, więc tylko samochód wchodzi w grę.
+				</p> <br>
 
-      <div style="padding: 10px; background-color: #ffffff; max-height: 200px; overflow-y: auto;">
-        <div class="items-list2">
-          <div>
-
-          <div>
-            <b>Kiedy</b> <br>
-              <pre>    od Piątku 9.10.2026 od godziny 16:00 (najwcześniej) </pre><br>
-              <pre>    do Niedzieli 11.10.2026 do godziny 11:00 (najpóźniej) </pre><br>
-          </div>
-          <div>
-            <b>Gdzie</b> <br>
-              <pre>    Borsk 194, 83-441 Borsk </pre><br>
-              <button style="padding: 2px; margin: 3px; margin-left: 4px;" onclick="window.open('https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/', '_blank')">
-                Otwórz w Google Maps
-              </button>
-            </div>
-          </div>
-        <b>Sekcja Q&A</b> <br>
-
-          </div>
-
-        
-
-        
-      </div>
-        
-        
-        
-      </div>
-
-    </main>
+				<b>text</b> <br> <br>
+				<p>
+					opis
+				</p> <br>
+				
+				
+				
+			</div>
+		</div>
+	</main>
 
     <!-- Okno informacji -->
     <section class="window info-window">
@@ -1168,6 +1250,12 @@
         <span>Notatnik</span>
       </button>
 
+	  <button class="start-item" id="saperButton">
+        <span class="glyph">⚫</span>
+        <span>Saper</span>
+      </button>
+	  
+
       <div class="start-divider"></div>
 
       <button class="start-item spawn-trigger">
@@ -1188,14 +1276,25 @@
   <!-- =====================================================
        PASEK ZADAŃ
        ===================================================== -->
-  <footer class="taskbar">
-    <button class="start-button" id="start-button">
-      <span class="start-logo">▣</span> Start
-    </button>
+	<footer class="taskbar">
+		<button class="start-button" id="start-button">
+			<span class="start-logo">▣</span> Start
+		</button>
 
-    <div class="taskbar-app">🖥 Projekt 96 - Windows 96</div>
-    <div class="clock" id="clock">23:59</div>
-  </footer>
+		<div class="taskbar-app">🖥 Projekt 96 - Windows 96</div>
+		<div class="taskbar-app" id="mediaButton">🎶 Windows Media Player</div>
+
+		<div style="display: flex;" class="clock">
+
+
+			<div class="ggpic">
+				<img src="images/gg.png">
+			</div>
+			<div  id="clock">23:59</div>
+		</div>
+		
+
+	</footer>
 
   <script>
     /*
@@ -1575,6 +1674,29 @@
         spawnFlyingItem();
       });
     });
+	
+	document.getElementById("mediaButton").addEventListener("click", (event) => {
+		event.stopPropagation();
+		const player = document.getElementById("media-player");
+  
+		if (player.style.display === "none" || player.style.display === "") {
+			player.style.display = "block";
+		} else {
+			player.style.display = "none";
+		}
+    });
+
+	document.getElementById("saperButton").addEventListener("click", (event) => {
+		event.stopPropagation();
+		const player = document.getElementById("saperWindow");
+  
+		if (player.style.display === "none" || player.style.display === "") {
+			player.style.display = "block";
+		} else {
+			player.style.display = "none";
+		}
+    });
+
 
     /*
       ==========================================================
@@ -1642,6 +1764,7 @@
         event.stopPropagation();
 
         closeStartMenu();
+		if (item.id === "saperButton") { return; }
         showStartError(item.querySelector("span:last-child")?.textContent.trim() || item.textContent.trim());
       });
     });
