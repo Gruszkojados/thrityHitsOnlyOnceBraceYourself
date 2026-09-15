@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Need for Speed Underground 2 setup</title>
+  <style>
+    :root {
+      --win-blue: #0a246a;
+      --win-blue-light: #3a6ea5;
+      --button-face: #d4d0c8;
+      --button-hi: #ffffff;
+      --button-shadow: #808080;
+      --ink: #111111;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: transparent;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
+      color: var(--ink);
+    }
+
+    body {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      padding: 0;
+    }
+
+    .installer-window {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      background: #d4d0c8;
+      border: 2px solid;
+      border-color: #ffffff #404040 #404040 #ffffff;
+      box-shadow: 1px 1px 0 #000, inset 1px 1px 0 #dfdfdf;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .titlebar {
+      height: 28px;
+      padding: 3px 4px 3px 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 13px;
+      background: linear-gradient(90deg, var(--win-blue), var(--win-blue-light));
+    }
+
+    .titlebar-icon {
+      width: 16px;
+      height: 16px;
+      display: grid;
+      place-items: center;
+      color: #000;
+      background: linear-gradient(135deg, #f8f8f8 25%, #9b9b9b 25% 50%, #f8f8f8 50% 75%, #9b9b9b 75%);
+      border: 1px solid #777;
+      font-size: 10px;
+    }
+
+    .titlebar-text { flex: 1; }
+
+    .close-button {
+      width: 21px;
+      height: 21px;
+      padding: 0;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      background: var(--button-face);
+      font: bold 14px Arial, sans-serif;
+      line-height: 15px;
+      cursor: pointer;
+    }
+
+    .content {
+      flex: 1;
+      min-height: 433px;
+      margin: 7px 7px 0;
+      display: grid;
+      grid-template-columns: 224px 1fr;
+      border: 1px solid #808080;
+      border-color: #808080 #fff #fff #808080;
+      background: #fff;
+    }
+
+    .art-placeholder {
+      min-height: 100%;
+      background: #fff;
+      border-right: 1px solid #808080;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      text-align: center;
+      color: #777;
+      font-size: 11px;
+    }
+
+    .nfs {
+      height: 400px;
+      width: 200px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Zamień zawartość tego elementu na <img src="twoj-obrazek.jpg">. */
+    .art-placeholder::before {
+      border: 1px dashed #aaa;
+      padding: 12px 8px;
+      width: 100%;
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      padding: 20px 21px 12px;
+      background: #fff;
+    }
+
+    h1 {
+      margin: 0 0 25px;
+      font-size: 27px;
+      line-height: 1;
+    }
+
+    p, li { font-size: 14px; }
+    p { margin: 0 0 18px; }
+    ul { margin: 0 0 20px 14px; padding-left: 14px; }
+    li { margin: 0 0 5px; }
+
+    .page-spacer { flex: 1; }
+
+    .code-help {
+      font-size: 13px;
+      margin-bottom: 13px;
+    }
+
+    .code-row {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 3px;
+      margin-bottom: 8px;
+    }
+
+    .code-input {
+      width: 100%;
+      min-width: 0;
+      height: 29px;
+      padding: 2px 1px;
+      border: 2px solid;
+      border-color: #404040 #fff #fff #404040;
+      background: #fff;
+      font: bold 14px "Courier New", monospace;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .code-input:focus {
+      outline: 1px dotted #000;
+      outline-offset: -4px;
+    }
+
+    .error {
+      min-height: 18px;
+      color: #c00000;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .progress-wrap { margin-top: 8px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+
+    .progress-track {
+      height: 22px;
+      padding: 2px;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+      background: #d4d0c8;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: repeating-linear-gradient(90deg, #000080 0 10px, #008080 10px 12px);
+      transition: width .2s linear;
+    }
+
+    .component-line {
+      min-height: 32px;
+      margin-top: 12px;
+      padding: 6px;
+      border: 1px solid #808080;
+      background: #f3f3f3;
+      font: 12px "Courier New", monospace;
+    }
+
+    .bottom-bar {
+      height: 63px;
+      padding: 13px 12px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 7px;
+      background: var(--button-face);
+      border-top: 1px solid #fff;
+    }
+
+    .win-button {
+      min-width: 85px;
+      height: 30px;
+      padding: 2px 13px;
+      background: var(--button-face);
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: 1px 1px 0 #000;
+      font: 13px Tahoma, sans-serif;
+      cursor: pointer;
+    }
+
+    .win-button:active { border-color: #404040 #fff #fff #404040; box-shadow: none; }
+    .win-button:disabled { color: #808080; cursor: default; }
+    .win-button.default { outline: 1px solid #000; outline-offset: -4px; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 600px) {
+      body { padding: 0; width: 100%; }
+      .installer-window { width: 100%; min-height: 100%; }
+      .content { grid-template-columns: 34% 66%; }
+      .page { padding: 16px 12px 10px; }
+      .code-input { font-size: 12px; }
+      h1 { font-size: 23px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="installer-window" aria-label="Instalator Need for Speed Underground 2">
+    
+
+    <section class="content">
+      <aside class="art-placeholder" aria-label="Miejsce na obrazek instalatora">
+        <div class="nfs">
+          <img src="images/nfs2.jpg">
+        </div>
+      </aside>
+
+      <section class="page">
+        <div id="welcome-page">
+          <h1>Witam Witam</h1>
+          <p>Installer dla Need for Speed : Underground 2 Seat Edition</p>
+          <p>Ta wersja zawiera</p>
+          <ul>
+            <li>Seata Leona 3 1.2 Benzyna</li>
+            <li>Niskie spalanie, 100km/h - TAK</li>
+            <li>Trasa Gdańsk - Zakopane na strzał na pełnym baku</li>
+            <li>Wsiadasz, jedziesz, a muzka gra lalalalala</li>
+          </ul>
+          <p>Kliknij “Next” wsiąść do hajpowozu.</p>
+        </div>
+
+        <div id="code-page" class="hidden">
+          <h1>Klucz produktu</h1>
+          <p>Podaj 7-sekcyjny klucz produktu</p>
+          <p class="code-help">Każda sekcja zawiera cztery litery lub cyfry. Kolejność sekcji nie ma znaczenia.</p>
+          <div class="code-row" id="code-row">
+            <input class="code-input" maxlength="4" inputmode="text" autocomplete="off" aria-label="Sekcja 1">
+            <input class="code-input" maxlength="4" inputmode="text" autocomplete="off" aria-label="Sekcja 2">
+            <input class="code-input" maxlength="4" inputmode="text" autocomplete="off" aria-label="Sekcja 3">
+            <input class="code-input" maxlength="4" inputmode="text" autocomplete="off" aria-label="Sekcja 4">
+            <input class="code-input" maxlength="4" inputmode="text" autocomplete="off" aria-label="Sekcja 5">
+            <input class="code-input" maxlength="4" inputmode="text" autocomplete="off" aria-label="Sekcja 6">
+            <input class="code-input" maxlength="4" inputmode="text" autocomplete="off" aria-label="Sekcja 7">
+          </div>
+          <div id="code-error" class="error" role="alert"></div>
+          <p class="page-spacer"></p>
+          <p><small>Kod demonstracyjny: <b>11AA</b> <b>22BB</b> <b>88KK</b> <b>33CC</b> <b>55HH</b> <b>0000</b> <b>0000</b></small></p>
+        </div>
+
+        <div id="install-page" class="hidden">
+          <h1>Installing</h1>
+          <p>Instalowanie Need for Speed Underground 2 Seat Edition.</p>
+          <div class="progress-wrap">
+            <div class="progress-label"><span id="component-name">Przygotowywanie napojów...</span><span id="percent">0%</span></div>
+            <div class="progress-track" aria-label="Postęp instalacji"><div id="progress-bar" class="progress-bar"></div></div>
+          </div>
+          <div id="component-line" class="component-line">Chlanie...</div>
+          <p class="page-spacer"></p>
+          <p>Załaduje się to będzie.</p>
+        </div>
+
+        <div id="done-page" class="hidden">
+          <h1>Instalacja zakończona</h1>
+          <p>Need for Speed Underground 2 Seat Edition zainstalowany pomyślnie.</p>
+          <p>Naciśnij X aby zakończyć.</p>
+        </div>
+      </section>
+    </section>
+
+    <footer class="bottom-bar">
+      <button id="back-button" class="win-button" type="button" disabled>&lt; Back</button>
+      <button id="next-button" class="win-button default" type="button">Next &gt;</button>
+      <button id="cancel-button" class="win-button" type="button">Cancel</button>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      const pages = {
+        welcome: document.getElementById('welcome-page'),
+        code: document.getElementById('code-page'),
+        install: document.getElementById('install-page'),
+        done: document.getElementById('done-page')
+      };
+      const inputs = [...document.querySelectorAll('.code-input')];
+      const next = document.getElementById('next-button');
+      const back = document.getElementById('back-button');
+      const cancel = document.getElementById('cancel-button');
+      const error = document.getElementById('code-error');
+      const requiredCode = ['1EE7', '2IE7', '01PB', 'BY97', '997P', '55FF', '6996'];
+      const components = [
+        'Zbieranie ekipy', 'Wkurzanie Oli', 'Chodzenie piwka',
+        'Golenie Majkiego', 'Budzenie Remiego',
+        'Mleczny Marcin w drodze', 'Bartas liczy kalorie i procenty', 'Krzychu czyści bile',
+        'Czaras rozkłada namiot', 'Pomijanie Cypka'
+      ];
+      let page = 'welcome';
+      let timer;
+
+      function show(name) {
+        Object.values(pages).forEach(el => el.classList.add('hidden'));
+        pages[name].classList.remove('hidden');
+        page = name;
+        back.disabled = name !== 'code';
+        next.disabled = name === 'install';
+        next.textContent = name === 'done' ? 'Finish' : 'Next >';
+        if (name === 'done') cancel.textContent = 'Close';
+      }
+
+      function normalizedValues() {
+        return inputs.map(input => input.value.trim().toUpperCase()).filter(Boolean);
+      }
+
+      function validCode() {
+        const values = normalizedValues();
+        if (values.length !== requiredCode.length || values.some(value => !/^[A-Z0-9]{4}$/.test(value))) return false;
+        return values.slice().sort().join('|') === requiredCode.slice().sort().join('|');
+      }
+
+      function startInstall() {
+        show('install');
+        const started = performance.now();
+        const bar = document.getElementById('progress-bar');
+        const percent = document.getElementById('percent');
+        const name = document.getElementById('component-name');
+        const line = document.getElementById('component-line');
+        timer = setInterval(() => {
+          const progress = Math.min((performance.now() - started) / 60000, 1);
+          const value = Math.floor(progress * 100);
+          bar.style.width = value + '%';
+          percent.textContent = value + '%';
+          const index = Math.min(components.length - 1, Math.floor(progress * components.length));
+          name.textContent = 'Installing ' + components[index] + '...';
+          line.textContent = 'Copying: ' + components[index] + '  [' + value + '%]';
+          if (progress >= 1) {
+            clearInterval(timer);
+            setTimeout(() => show('done'), 250);
+          }
+        }, 200);
+      }
+
+      inputs.forEach((input, index) => {
+        input.addEventListener('input', () => {
+          input.value = input.value.replace(/[^a-z0-9]/gi, '').toUpperCase().slice(0, 4);
+          if (input.value.length === 4 && inputs[index + 1]) inputs[index + 1].focus();
+          error.textContent = '';
+        });
+        input.addEventListener('keydown', event => {
+          if (event.key === 'Backspace' && !input.value && inputs[index - 1]) inputs[index - 1].focus();
+        });
+      });
+
+      next.addEventListener('click', () => {
+        if (page === 'welcome') return show('code');
+        if (page === 'code') {
+          if (!validCode()) {
+            error.textContent = 'Zły kod. Wprowadź właściwy zestaw siedmiu sekcji.';
+            inputs.find(input => !input.value)?.focus();
+            return;
+          }
+          return startInstall();
+        }
+        if (page === 'done') window.close();
+      });
+
+      back.addEventListener('click', () => { if (page === 'code') show('welcome'); });
+      cancel.addEventListener('click', () => {
+        if (timer) clearInterval(timer);
+        show('welcome');
+        inputs.forEach(input => input.value = '');
+        error.textContent = '';
+        cancel.textContent = 'Cancel';
+      });
+    })();
+  </script>
+</body>
+</html>

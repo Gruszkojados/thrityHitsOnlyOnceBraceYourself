@@ -1,0 +1,256 @@
+{
+  "name": "Mój komputer",
+  "type": "folder",
+  "children": [
+    {
+      "name": "Dokumenty",
+      "type": "folder",
+      "children": [
+        {
+          "name": "projekty.txt",
+          "type": "file"
+        },
+        {
+          "name": "lista-zadan.txt",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "name": "Zdjęcia",
+      "type": "folder",
+      "children": [
+        {
+          "name": "borsk.jpg",
+          "type": "file",
+          "path": "images/borsk.jpg"
+        },
+        {
+          "name": "gg.png",
+          "type": "file",
+          "path": "images/gg.png"
+        },
+        {
+          "name": "miniatury",
+          "type": "folder",
+          "children": [
+            {
+              "name": "podglad-01.jpg",
+              "type": "file"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Muzyka",
+      "type": "folder",
+      "children": [
+        {
+          "name": "InTheEnd.mp3",
+          "type": "file",
+          "path": "audio/InTheEnd.mp3"
+        },
+        {
+          "name": "playlist.m3u",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "name": "Gry",
+      "type": "folder",
+      "children": [
+        {
+          "name": "Saper 98",
+          "type": "folder",
+          "children": [
+            {
+              "name": "saper.html",
+              "type": "file",
+              "path": "saper.html"
+            }
+          ]
+        },
+        {
+          "name": "zapisy",
+          "type": "folder",
+          "children": [
+            {
+              "name": "stan-gry-01.sav",
+              "type": "file"
+            },
+            {
+              "name": "stan-gry-02.sav",
+              "type": "file"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Internet",
+      "type": "folder",
+      "children": [
+        {
+          "name": "Ulubione",
+          "type": "folder",
+          "children": [
+            {
+              "name": "Google.url",
+              "type": "file"
+            },
+            {
+              "name": "Stare GG.url",
+              "type": "file"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kopia zapasowa",
+      "type": "folder",
+      "children": [
+        {
+          "name": "2026",
+          "type": "folder",
+          "children": [
+            {
+              "name": "wrzesień",
+              "type": "folder",
+              "children": [
+                {
+                  "name": "system",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "windows",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "profile",
+                          "type": "folder",
+                          "children": [
+                            {
+                              "name": "dane",
+                              "type": "folder",
+                              "children": [
+                                {
+                                  "name": "lokalne",
+                                  "type": "folder",
+                                  "children": [
+                                    {
+                                      "name": "cache",
+                                      "type": "folder",
+                                      "children": [
+                                        {
+                                          "name": "stare",
+                                          "type": "folder",
+                                          "children": [
+                                            {
+                                              "name": "wersje",
+                                              "type": "folder",
+                                              "children": [
+                                                {
+                                                  "name": "ostatnia",
+                                                  "type": "folder",
+                                                  "children": [
+                                                    {
+                                                      "name": "manifest.json",
+                                                      "type": "file"
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Archiwum",
+      "type": "folder",
+      "children": [
+        {
+          "name": "2008",
+          "type": "folder",
+          "children": [
+            {
+              "name": "wakacje",
+              "type": "folder",
+              "children": [
+                {
+                  "name": "zdjęcia",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "oryginały",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "kamera",
+                          "type": "folder",
+                          "children": [
+                            {
+                              "name": "karta-01",
+                              "type": "folder",
+                              "children": [
+                                {
+                                  "name": "partia-a",
+                                  "type": "folder",
+                                  "children": [
+                                    {
+                                      "name": "partia-b",
+                                      "type": "folder",
+                                      "children": [
+                                        {
+                                          "name": "odzyskane",
+                                          "type": "folder",
+                                          "children": [
+                                            {
+                                              "name": "zdjecie-glebokie.jpg",
+                                              "type": "file"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "readme.txt",
+      "type": "file"
+    }
+  ]
+}

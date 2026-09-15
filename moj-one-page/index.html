@@ -1,878 +1,70 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Niezapomniana 30 - Windows 96 Edition</title>
-
+  <link rel="stylesheet" href="style.css">
   <style>
-    :root {
-      --desktop: #008080;
-      --gray: #c0c0c0;
-      --white: #ffffff;
-      --light: #dfdfdf;
-      --dark: #808080;
-      --black: #000000;
-      --blue: #000080;
-      --blue2: #1084d0;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      min-height: 100vh;
-      
-      color: #000;
-      font-family: "MS Sans Serif", Tahoma, Arial, sans-serif;
-      font-size: 13px;
-      overflow-x: hidden;
-      padding-bottom: 34px;
-      background-image: url("images/xp-wallpaper.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-    }
-
-    button, input { font: inherit; }
-
-	.hidden {
-  		display: none !important;
-	}
-
-    /* ---------- klasyczne okno ---------- */
-    .window {
-      background: var(--gray);
-      border: 2px solid;
-      border-top-color: var(--white);
-      border-left-color: var(--white);
-      border-right-color: var(--black);
-      border-bottom-color: var(--black);
-      box-shadow: 2px 2px 0 #000;
-    }
-
-    .title-bar {
-      height: 23px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 2px 3px;
-      color: #fff;
-      background: var(--blue);
-      font-weight: bold;
-      user-select: none;
-    }
-
-    .title-icon {
-      width: 16px;
-      height: 16px;
-      display: grid;
-      place-items: center;
-      flex: 0 0 16px;
-      background: #c0c0c0;
-      color: #000080;
-      border: 1px solid #000;
-      font-size: 10px;
-    }
-
-    .title-text {
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .window-buttons { display: flex; gap: 2px; }
-
-    .win-btn {
-      width: 18px;
-      height: 17px;
-      padding: 0;
-      background: var(--gray);
-      border: 2px solid;
-      border-top-color: #fff;
-      border-left-color: #fff;
-      border-right-color: #000;
-      border-bottom-color: #000;
-      font-family: Arial, sans-serif;
-      font-weight: bold;
-      line-height: 11px;
-    }
-
-    .win-btn:active,
-    .classic-btn:active,
-    .taskbar-btn:active {
-      border-top-color: #000;
-      border-left-color: #000;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-    }
-
-	.ggpic {
-		/* Upewnij się, że div ma zdefiniowaną szerokość i wysokość */
-		width: 100%;  /* Przykładowa wielkość */
-		height: 100%; /* Przykładowa wielkość */
-		overflow: hidden; /* Opcjonalnie: ucina wszystko, co wystaje poza div */
-		cursor: pointer;
-	}
-
-	.ggpic img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover; /* Sprawia, że zdjęcie wypełnia div bez zniekształceń (może je lekko przyciąć) */
-	}
-
-    /* ---------- pulpit ---------- */
-    .desktop {
-      min-height: calc(100vh - 34px);
-      position: relative;
-      padding: 16px 18px 55px;
-    }
-
-    .desktop-icons {
+    /* Komunikat pojawiający się po utworzeniu 20 latających okienek. */
+    .twenty-code-window {
       position: fixed;
-      left: 10px;
-      top: 12px;
-      width: 82px;
-      display: flex;
-      flex-direction: column;
-      gap: 13px;
-      z-index: 40;
-    }
-
-    .desktop-icon {
-      width: 82px;
-      padding: 3px;
-      color: #fff;
-      text-align: center;
-      text-shadow: 1px 1px #000;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .desktop-icon:hover {
-      background: #000080;
-    }
-
-    .desktop-icon .icon {
-      height: 39px;
-      display: grid;
-      place-items: center;
-      font-size: 28px;
-      text-shadow: none;
-      filter: drop-shadow(1px 1px #000);
-    }
-
-    .desktop-icon span {
-      display: block;
-      line-height: 13px;
-    }
-
-
-    /* ---------- małe okna w tle ---------- */
-    .background-windows {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    .bg-browser {
-      position: absolute;
-      opacity: 1;
-      transform: none !important;
-      overflow: hidden;
-    }
-
-    .bg-browser .browser-body {
-      height: calc(100% - 23px);
-      padding: 7px;
-      background: #c0c0c0;
-    }
-
-    .bg-browser .fake-address {
-      height: 20px;
-      margin-bottom: 6px;
-      padding: 2px 5px;
-      background: #fff;
-      border: 2px solid;
-      border-top-color: #808080;
-      border-left-color: #808080;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-      font: 10px "Courier New", monospace;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .bg-browser .jpg-view {
-      width: 100%;
-      height: calc(100% - 26px);
-      min-height: 80px;
-      background: #fff;
-      border: 2px solid;
-      border-top-color: #808080;
-      border-left-color: #808080;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .jpg-link {
-      cursor: pointer;
-    }
-
-    .bg-browser .jpg-view img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .jpg-placeholder {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 12px;
-      background:
-        repeating-linear-gradient(
-          0deg,
-          #fff 0 9px,
-          #eee 9px 10px
-        );
-      color: #000080;
-      font: bold 11px/1.35 "Courier New", monospace;
-    }
-
-    .bg1 { left: 200px; top: 48px; width: 500px; height: 400px; }
-    .bg2 { right: 45px; top: 78px; width: 650px; height: 600px; }
-    .bg3 { left: 300px; top: 470px; width: 810px; height: 475px; }
-    .bg4 { right: 300px; top: 540px; width: 600px; height: 400px; }
-    .bg5 { left: 20px; top: 600px; width: 200px; height: 300px; }
-    .bg6 { right: -30px; top: 100px; width: 600px; height: 600px; }
-    .bg7 { left: 100px; top: 100px; width: 600px; height: 600px; }
-
-    /* ---------- okno błędu uruchamianego z menu Start ---------- */
-    .error-window {
-      position: fixed;
+      z-index: 100000;
+      width: 330px;
       left: 50%;
       top: 50%;
-      width: min(390px, calc(100vw - 24px));
       transform: translate(-50%, -50%);
-      z-index: 23000;
-    }
-
-    .error-body {
-      padding: 14px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      background: #c0c0c0;
-    }
-
-    .error-symbol {
-      width: 38px;
-      height: 38px;
-      flex: 0 0 38px;
-      display: grid;
-      place-items: center;
-      background: #fff;
-      color: #cc0000;
+      background: #d4d0c8;
       border: 2px solid;
-      border-top-color: #808080;
-      border-left-color: #808080;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-      font: bold 26px Arial, sans-serif;
-    }
-
-    .error-message {
-      font: 12px/1.45 "Courier New", monospace;
-    }
-
-    .error-actions {
-      padding: 0 14px 14px;
-      text-align: center;
-      background: #c0c0c0;
-    }
-
-    /* ---------- główna przeglądarka ---------- */
-    .main-browser {
-      position: relative;
-      z-index: 10;
-      width: min(700px, calc(100% - 125px));
-      margin: 0 auto;
-    }
-
-    .menu-bar {
-      height: 25px;
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      padding: 0 8px;
-      background: #c0c0c0;
-      border-bottom: 1px solid #808080;
-    }
-
-    .menu-bar span {
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .menu-bar span:hover {
-      background: #000080;
-      color: #fff;
-    }
-
-    .toolbar {
-      min-height: 52px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 6px;
-      border-bottom: 1px solid #808080;
-    }
-
-    .toolbar-icon {
-      width: 48px;
-      height: 43px;
-      padding: 2px;
-      background: transparent;
-      border: 1px solid transparent;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 1px;
-      font-size: 10px;
-      cursor: pointer;
-    }
-
-    .toolbar-icon:hover {
-      border-top-color: #fff;
-      border-left-color: #fff;
-      border-right-color: #808080;
-      border-bottom-color: #808080;
-      background: #d0d0d0;
-    }
-
-    .toolbar-icon .glyph { font-size: 21px; line-height: 20px; }
-
-    .address-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 7px;
-      border-bottom: 1px solid #808080;
-    }
-
-    a {
-      font-weight: bold;
-      color: #2563eb;
-      text-decoration: none;
-      transition: 0.2s;
-      display: inline-block; /* Wymagane, aby transformacja zadziałała */
-    }
-
-    a:hover {
-      color: #1d4ed8;
-      transform: translateY(-2px); /* Delikatny skok w górę */
-    }
-
-    .gk {
-      border: dotted 1px black; 
-      margin: 2px; 
-      padding: 2px;
-    }
-
-    .address {
-      flex: 1;
-      height: 22px;
-      padding: 2px 5px;
-      background: #fff;
-      border: 2px solid;
-      border-top-color: #808080;
-      border-left-color: #808080;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-      font: 11px "Courier New", monospace;
-    }
-
-    .classic-btn {
-      min-width: 70px;
-      padding: 4px 9px;
-      background: #c0c0c0;
-      border: 2px solid;
-      border-top-color: #fff;
-      border-left-color: #fff;
-      border-right-color: #000;
-      border-bottom-color: #000;
-      cursor: pointer;
-    }
-
-    /* ---------- hero ---------- */
-    .hero {
-      min-height: 200px;
-      padding: 35px;
-      display: flex;
-      align-items: center;
-    }
-
-    .hero-inner { width: 100%; }
-
-    .hero-content {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-    }
-
-    .hero-icon {
-      font-size: 48px;
-      width: 62px;
-      flex: 0 0 62px;
-      text-align: center;
-      filter: drop-shadow(1px 1px #000);
-    }
-
-    h1 {
-      font: bold 38px/1.1 "Courier New", monospace;
-      margin-bottom: 18px;
-    }
-
-    .hero p {
-      max-width: 650px;
-      font: 14px/1.6 "Courier New", monospace;
-    }
-
-    .separator {
-      margin: 25px 0 14px;
-      border-top: 1px solid #808080;
-      border-bottom: 1px solid #fff;
-    }
-
-    .scroll-link {
-      color: #0000ee;
-      font: bold 13px "Courier New", monospace;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
-    /* ---------- lista ---------- */
-    .list-window {
-      position: relative;
-      z-index: 10;
-      width: min(900px, calc(100% - 100px));
-      margin: 25px auto 0;
-    }
-
-    .window-content { padding: 10px; background: #c0c0c0; }
-
-    .project-icons {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 10px;
-      padding-bottom: 7px;
-      border-bottom: 1px solid #808080;
-    }
-
-    .project-icon {
-      width: 67px;
-      min-height: 54px;
-      background: transparent;
-      border: 1px solid transparent;
-      cursor: pointer;
-      font-size: 10px;
-    }
-
-    .project-icon:hover {
-      border-top-color: #fff;
-      border-left-color: #fff;
-      border-right-color: #808080;
-      border-bottom-color: #808080;
-      background: #d8d8d8;
-    }
-
-    .project-icon .glyph {
-      display: block;
-      font-size: 24px;
-      line-height: 25px;
-    }
-
-    .items-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      background: #fff;
-      padding: 7px;
-      border: 2px solid;
-      border-top-color: #808080;
-      border-left-color: #808080;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-    }
-
-    .items-list2 {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      background: #fff;
-      padding: 7px;
-      border-top-color: #808080;
-      border-left-color: #808080;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-    }
-
-    .item-card {
-      min-height: 42px;
-      padding: 7px 10px;
-      display: flex;
-      align-items: center;
-      background: #c0c0c0;
-      border: 2px solid;
-      border-top-color: #fff;
-      border-left-color: #fff;
-      border-right-color: #808080;
-      border-bottom-color: #808080;
-      font: 13px "Courier New", monospace;
-      cursor: pointer;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity .25s linear, transform .25s linear;
-    }
-
-    .item-card::before {
-      content: "📄";
-      font-family: Arial, sans-serif;
-      font-size: 18px;
-      margin-right: 10px;
-    }
-
-    .item-card:hover {
-      background: #000080;
-      color: #fff;
-    }
-
-    .item-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .item-card.completed {
-      color: #008000;
-      background: #dfdfdf;
-      text-decoration: line-through;
-    }
-
-    .item-card.completed::before { content: "☑"; }
-
-    .status-bar {
-      display: flex;
-      gap: 4px;
-      margin-top: 7px;
-      font: 10px "Courier New", monospace;
-    }
-
-    .status {
-      padding: 4px 6px;
-      border: 1px solid;
-      border-top-color: #808080;
-      border-left-color: #808080;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-    }
-
-    .status:first-child { width: 35%; }
-
-    .status:last-child { flex: 1; }
-
-    /* ---------- start ---------- */
-    .start-menu {
-      position: fixed;
-      left: 3px;
-      bottom: 33px;
-      width: 270px;
-      display: none;
-      z-index: 20000;
+      border-color: #fff #404040 #404040 #fff;
       box-shadow: 2px 2px 0 #000;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
     }
 
-    .start-menu.open { display: flex; }
-
-    .start-side {
-      width: 31px;
-      background: #000080;
+    .twenty-code-window .title-bar {
+      display: flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 5px;
       color: #fff;
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      padding: 7px 4px;
+      background: linear-gradient(90deg, #0a246a, #3a6ea5);
+      font-size: 12px;
       font-weight: bold;
-      letter-spacing: 1px;
+    }
+
+    .twenty-code-window .title-text { flex: 1; }
+
+    .twenty-code-body {
+      padding: 20px 18px 12px;
+      background: #d4d0c8;
       text-align: center;
+      font-size: 13px;
     }
 
-    .start-main {
-      flex: 1;
-      background: #c0c0c0;
-      padding: 4px;
-    }
-
-    .start-item {
-      width: 100%;
-      min-height: 40px;
-      padding: 5px 7px;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      background: transparent;
-      border: 0;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .start-item:hover {
-      color: #fff;
-      background: #000080;
-    }
-
-    .start-item .glyph {
-      width: 30px;
-      text-align: center;
-      font-size: 23px;
-    }
-
-    .start-divider {
-      height: 1px;
-      margin: 4px 2px;
-      border-top: 1px solid #808080;
-      border-bottom: 1px solid #fff;
-    }
-
-    /* ---------- latające placeholdery ---------- */
-    .flying-layer {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 15000;
-      overflow: hidden;
-    }
-
-    .flying-item {
-      position: absolute;
-      width: 88px;
-      height: 88px;
-      pointer-events: auto;
-      cursor: pointer;
-      user-select: none;
-      transform-origin: center;
-    }
-
-    .flying-item .flying-frame {
-      width: 100%;
-      height: 100%;
-      padding: 5px;
-      border: 2px solid;
-      border-top-color: #fff;
-      border-left-color: #fff;
-      border-right-color: #000;
-      border-bottom-color: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .flying-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      image-rendering: auto;
-    }
-
-    .png-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 5px;
-      background: #fff;
-      border: 1px dotted #000;
+    .twenty-code-value {
+      margin: 13px 0 18px;
       color: #000080;
-      font: bold 10px/1.2 "Courier New", monospace;
+      font: bold 30px "Courier New", monospace;
+      letter-spacing: 5px;
     }
 
-    .flying-label {
-      position: absolute;
-      left: 2px;
-      right: 2px;
-      bottom: -17px;
-      padding: 2px 3px;
-      background: #000080;
-      color: #fff;
-      font: 9px "Courier New", monospace;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-align: center;
+    .twenty-code-actions {
+      padding: 8px 10px;
+      border-top: 1px solid #fff;
+      text-align: right;
+      background: #d4d0c8;
     }
 
-    .flying-item.spinning {
-      animation: spin-and-stop 1.25s cubic-bezier(.15,.8,.25,1) forwards;
-    }
-
-    @keyframes spin-and-stop {
-      0%   { transform: rotate(0deg); }
-      18%  { transform: rotate(180deg); }
-      38%  { transform: rotate(540deg); }
-      58%  { transform: rotate(900deg); }
-      76%  { transform: rotate(1160deg); }
-      90%  { transform: rotate(1270deg); }
-      100% { transform: rotate(1260deg); }
-    }
-
-    /* ---------- informacja ---------- */
-    .info-window {
-      position: fixed;
-      right: 20px;
-      bottom: 48px;
-      width: 225px;
-      z-index: 120;
-    }
-
-    .info-body {
-      padding: 12px;
-      background: #c0c0c0;
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-    }
-
-    .info-symbol {
-      width: 32px;
-      height: 32px;
-      border: 1px solid #000;
-      border-radius: 50%;
-      background: #fff;
-      display: grid;
-      place-items: center;
-      color: #000080;
-      font-weight: bold;
-      font-size: 22px;
-      flex: 0 0 32px;
-    }
-
-    .info-body p { font: 11px/1.4 "Courier New", monospace; }
-
-    .info-actions {
-      padding: 0 0 10px;
-      background: #c0c0c0;
-      text-align: center;
-    }
-
-    /* ---------- taskbar ---------- */
-    .taskbar {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 34px;
-      padding: 3px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: #c0c0c0;
-      border-top: 2px solid #fff;
-      z-index: 21000;
-    }
-
-    .start-button {
+    .twenty-code-actions button {
+      min-width: 76px;
       height: 27px;
-      min-width: 79px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 2px 8px;
-      background: #c0c0c0;
+      background: #d4d0c8;
       border: 2px solid;
-      border-top-color: #fff;
-      border-left-color: #fff;
-      border-right-color: #000;
-      border-bottom-color: #000;
-      font-weight: bold;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: 1px 1px 0 #000;
+      font: 12px Tahoma, sans-serif;
       cursor: pointer;
-    }
-
-    .start-button.active {
-      border-top-color: #000;
-      border-left-color: #000;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-    }
-
-    .start-logo { font-size: 16px; }
-
-    .taskbar-app {
-      height: 27px;
-      min-width: 190px;
-      max-width: 290px;
-      padding: 4px 9px;
-      border: 2px solid;
-      border-top-color: #808080;
-      border-left-color: #808080;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-	#media-player {
-		display: none;
-	}
-
-	#mediaButton {
-		cursor: pointer;
-	}
-
-	#saperWindow {
-		display: none;
-	}
-
-    .clock {
-      margin-left: auto;
-      min-width: 72px;
-      height: 27px;
-      padding: 5px 8px;
-      text-align: center;
-      border: 2px solid;
-      border-top-color: #808080;
-      border-left-color: #808080;
-      border-right-color: #fff;
-      border-bottom-color: #fff;
-      font: 11px "Courier New", monospace;
-    }
-
-    @media (max-width: 760px) {
-      .desktop { padding: 8px 8px 55px; }
-      .desktop-icons { display: none; }
-      .main-browser, .list-window { width: 100%; }
-      .bg-browser { display: none; }
-      .hero { padding: 25px 18px; }
-      .hero-icon { display: none; }
-      .address-row { display: none; }
-      .menu-bar { gap: 12px; overflow-x: auto; }
-      .toolbar { overflow-x: auto; }
-      .info-window { right: 7px; bottom: 43px; transform: scale(.85); transform-origin: bottom right; }
-      .taskbar-app { min-width: 0; flex: 1; }
     }
   </style>
 </head>
@@ -881,24 +73,36 @@
   <div class="desktop">
 
     <!-- =====================================================
-         DODATKOWE MAŁE OKNA W TLE
+         DODATKOWE MAŁE OKNA W TLE 1EE7-2IE7
          ===================================================== -->
     <div class="background-windows" aria-hidden="true">
-      <div class="window bg-browser bg1">
+      <div class="window bg-browser bg1" id="bg1">
         <div class="title-bar">
           <span class="title-icon">🌐</span>
-          <span class="title-text">Internet Explorer</span>
+          <span class="title-text">Tube Tube Hehe</span>
+          <div class="window-buttons">
+            <button class="win-btn spawn-trigger">_</button>
+            <button class="win-btn spawn-trigger">□</button>
+            <button class="win-btn" id="closeButton1">×</button>
+          </div>
         </div>
+        
         <div class="browser-body">
           <div class="fake-address">http://redtube_normalnie/from_shoe</div>
           <div class="jpg-view"></div>
         </div>
       </div>
 
-      <div class="window bg-browser bg2">
+
+      <div class="window bg-browser bg2" id="bg2">
         <div class="title-bar">
           <span class="title-icon">🖼️</span>
-          <span class="title-text">Internet Explorer</span>
+          <span class="title-text">Heroes 3, 3 najlepszy</span>
+          <div class="window-buttons">
+            <button class="win-btn spawn-trigger">_</button>
+            <button class="win-btn spawn-trigger">□</button>
+            <button class="win-btn" id="closeButton2">×</button>
+          </div>
         </div>
         <div class="browser-body">
           <div class="fake-address">http://heroskitop.pl</div>
@@ -906,10 +110,15 @@
         </div>
       </div>
 
-      <div class="window bg-browser bg3">
+      <div class="window bg-browser bg3" id="bg3">
         <div class="title-bar">
           <span class="title-icon">⭐</span>
           <span class="title-text">Ikariam.com</span>
+          <div class="window-buttons">
+            <button class="win-btn spawn-trigger">_</button>
+            <button class="win-btn spawn-trigger">□</button>
+            <button class="win-btn" id="closeButton3">×</button>
+          </div>
         </div>
         <div class="browser-body">
           <div class="fake-address">https://mody_do_ikariam.com.pl</div>
@@ -917,10 +126,15 @@
         </div>
       </div>
 
-      <div class="window bg-browser bg4">
+      <div class="window bg-browser bg4" id="bg4">
         <div class="title-bar">
           <span class="title-icon">📷</span>
-          <span class="title-text">Explorer</span>
+          <span class="title-text">Goooooogle</span>
+          <div class="window-buttons">
+            <button class="win-btn spawn-trigger">_</button>
+            <button class="win-btn spawn-trigger">□</button>
+            <button class="win-btn" id="closeButton4">×</button>
+          </div>
         </div>
         <div class="browser-body">
           <div class="fake-address">http://goglek.com</div>
@@ -928,50 +142,84 @@
         </div>
       </div>
 
-      <div class="window bg-browser bg5">
+      <div class="window bg-browser bg5" id="bg5">
         <div class="title-bar">
           <span class="title-icon">🦽</span>
           <span class="title-text">Mapa</span>
+          <div class="window-buttons">
+            <button class="win-btn spawn-trigger">_</button>
+            <button class="win-btn spawn-trigger">□</button>
+            <button class="win-btn" id="closeButton5">×</button>
+          </div>
         </div>
         <div class="browser-body">
           <div class="fake-address">http://jak dojade na impreze.com</div>
-          <div class="jpg-view jpg-link" onclick="window.open('https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/', '_blank')"></div>
+          <div class="jpg-view jpg-link"
+            onclick="window.open('https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/', '_blank')"></div>
         </div>
-      </div>
+      </div> 
 
-      <div class="bg-browser bg6 saper" id="saperWindow">
-        <iframe src="saper.html"
-          width="430"
-          height="570"
-          style="border:0"
-          title="Saper Windows 98">
+      <div class="window bg-browser bg6 saper" id="saperWindow">
+        <div class="title-bar">
+          <div class="title-icon">⚫</div>
+          <div class="title-text">Saper</div>
+          <div class="window-buttons">
+            <button class="win-btn spawn-trigger">_</button>
+            <button class="win-btn spawn-trigger">□</button>
+            <button class="win-btn saperButton">×</button>
+          </div>
+        </div>
+        <iframe src="saper.html" width="100%" height="100%" class="iframe-frame" title="Saper Windows 98">
         </iframe>
       </div>
 
-      <div class="bg-browser bg7" id="media-player">
-        <iframe src="media.html"
-          width="430"
-          height="570"
-          style="border:0"
-          title="Media Player">
+      <div class="bg-browser bg7 mediaPlayer" id="media-player">
+        <div class="title-bar">
+          <div class="title-icon">🎵</div>
+          <div class="title-text">Media Player</div>
+          <div class="window-buttons">
+            <button class="win-btn spawn-trigger">_</button>
+            <button class="win-btn spawn-trigger">□</button>
+            <button class="win-btn mediaButton mediaPlayerButton">×</button>
+          </div>
+        </div>
+        <iframe src="media.html" class="iframe-frame" title="Media Player">
         </iframe>
       </div>
+
+      <div class="bg-browser bg8 paint" id="paintId">
+        <div class="title-bar">
+          <div class="title-icon">🎨</div>
+          <div class="title-text">Paint</div>
+          <div class="window-buttons">
+            <button class="win-btn spawn-trigger">_</button>
+            <button class="win-btn spawn-trigger">□</button>
+            <button class="win-btn paintClose">×</button>
+          </div>
+        </div>
+        <iframe
+          src="paint-windows-98.html"
+          style="width:400px; height:500px; border:0;">
+        </iframe>
+      </div>
+
+      
 
     </div>
-    
+
     <!-- =====================================================
          IKONY PULPITU — KAŻDA TWORZY LOSOWY LATAJĄCY PNG
          ===================================================== -->
     <aside class="desktop-icons">
-      <div class="desktop-icon spawn-trigger" data-source="desktop">
+      <div class="desktop-icon mojKomputerButton" data-source="desktop">
         <div class="icon">🖥️</div>
         <span>Mój komputer</span>
       </div>
-      <div class="desktop-icon spawn-trigger" data-source="desktop">
+      <div class="desktop-icon plikiExit" data-source="desktop">
         <div class="icon">📁</div>
         <span>Moje dokumenty</span>
       </div>
-      <div class="desktop-icon spawn-trigger" data-source="desktop">
+      <div class="desktop-icon internetExplorerButton" data-source="desktop">
         <div class="icon">🌐</div>
         <span>Internet Explorer</span>
       </div>
@@ -983,19 +231,28 @@
         <div class="icon">💾</div>
         <span>Dyskietka 3,5"</span>
       </div>
+      <div class="desktop-icon cdButton" id="cdButtonId" data-source="desktop">
+        <div class="icon">
+          <div class="nfspic">
+            <img src="images/nfsico.ico" alt="NFS installer">
+          </div>
+        </div>
+        <span>Install NFSU2</span>
+      </div>
     </aside>
 
     <!-- =====================================================
          GŁÓWNE OKNO / PRZEGLĄDARKA
          ===================================================== -->
-    <div class="window main-browser">
+
+    <div class="window main-browser" id="mojKomputer">
       <div class="title-bar">
         <div class="title-icon spawn-trigger">▣</div>
-        <div class="title-text">Projekt 96 - Windows 96</div>
+        <div class="title-text"> Mój komputer - Windows 96</div>
         <div class="window-buttons">
           <button class="win-btn">_</button>
           <button class="win-btn">□</button>
-          <button class="win-btn">×</button>
+          <button class="win-btn mojKomputerButton">×</button>
         </div>
       </div>
 
@@ -1045,16 +302,37 @@
     </div>
 
     <!-- =====================================================
+         cdWindow
+         ===================================================== -->
+
+    <div class="window main-browser" id="cdWindow">
+      <div class="title-bar">
+        <div class="title-icon spawn-trigger">▣</div>
+        <div class="title-text"> Need For Speed : Underground 2</div>
+        <div class="window-buttons">
+          <button class="win-btn spawn-trigger">_</button>
+          <button class="win-btn spawn-trigger">□</button>
+          <button class="win-btn cdButton">×</button>
+        </div>
+      </div>
+
+      <iframe src="need-for-speed-underground-2-installer.html"  class="installer-frame">>
+        </iframe>
+    </div>
+
+    
+
+    <!-- =====================================================
          LISTA Z data.json
          ===================================================== -->
-    <main class="window list-window" id="lista">
+    <main class="window list-window" id="internetExplorer">
       <div class="title-bar">
         <div class="title-icon">☷</div>
-        <div class="title-text">Mój Komputer \ Lista potrzebnych/przydatnych rzeczy</div>
+        <div class="title-text">Internet Explorer \ Lista potrzebnych/przydatnych rzeczy</div>
         <div class="window-buttons">
-          <button class="win-btn">_</button>
-          <button class="win-btn">□</button>
-          <button class="win-btn">×</button>
+          <button class="win-btn spawn-trigger">_</button>
+          <button class="win-btn spawn-trigger">□</button>
+          <button class="win-btn internetExplorerButton">×</button>
         </div>
       </div>
 
@@ -1087,13 +365,13 @@
           </button>
         </div>
 
-        <div style="padding: 10px; background-color: #ffffff; max-height: 300px; overflow-y: auto;">
-      <div class="items-list" id="json-items-container">
-        <div style="padding:15px;text-align:center;font-family:'Courier New',monospace;">
-          Ładowanie data.json...
+        <div class="scroll-container items-scroll">
+          <div class="items-list" id="json-items-container">
+            <div class="loading-message">
+              Ładowanie data.json...
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
         <div class="status-bar">
           <div class="status">Elementów: <span id="task-count">...</span></div>
@@ -1103,98 +381,136 @@
       </div>
     </main>
 
-     <!-- =====================================================
+    <!-- =====================================================
          Potrzebne informacje
          ===================================================== -->
-	<main class="window list-window" id="lista">
-		<div class="title-bar">
-			<div class="title-icon">📝</div>
-			<div class="title-text">Notatnik \ Przydatne informacje</div>
-			<div class="window-buttons">
-				<button class="win-btn spawn-trigger">_</button>
-				<button class="win-btn spawn-trigger">□</button>
-				<button class="win-btn spawn-trigger">×</button>
-			</div>
-		</div>
-	
-		<div class="window-content">
-			<div class="menu-bar">
-				<span class="spawn-trigger">Plik</span>
-				<span class="spawn-trigger">Edycja</span>
-				<span class="spawn-trigger">Widok</span>
-				<span class="spawn-trigger">Ulubione</span>
-				<span class="spawn-trigger">Narzędzia</span>
-				<span class="spawn-trigger">Pomoc</span>
-			</div>
-		</div>
-	
-		<div style="padding: 10px; background-color: #ffffff; max-height: 200px; overflow-y: auto;">
-			<div class="items-list2">
-	
-	
-			<div class="gk">
-				<b>Kiedy</b> <br>
-				<pre>    od Piątku 9.10.2026 od godziny 16:00 (najwcześniej) </pre><br>
-				<pre>    do Niedzieli 11.10.2026 do godziny 11:00 (najpóźniej) </pre><br>
-			</div>
-	
-			<div class="gk">
-				<b>Gdzie</b> <br> <br>
-				<pre>    <a href="https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/" target="_blank">Borsk 194, 83-441 Borsk</a></pre>
-				<br>
-			</div>
-	
-			<div class="gk">
-				<b>Kilka podstawowych zasad</b> <br> <br>
-				<p>
-					W obiekcie obowiązuje cisza nocna w godzinach 23-9.
-					Mam ogromną prośbę o przyzwoite zachowanie, żeby nie robić trzody i się nie napierdolić jak świnia!
-					Postarajmy się
-					niczego nie zniszczyć.
-					Mam nadzieję że po prostu spędzimy razem fajny weekend 😁
-				</p> <br>
-			</div>
+    <main class="window list-window" id="informacje">
+      <div class="title-bar">
+        <div class="title-icon">📝</div>
+        <div class="title-text">Notatnik \ Przydatne informacje</div>
+        <div class="window-buttons">
+          <button class="win-btn spawn-trigger">_</button>
+          <button class="win-btn spawn-trigger">□</button>
+          <button class="win-btn noteButton">×</button>
+        </div>
+      </div>
 
-			
-			<div class="gk">
-				<b>Sekcja Q&A</b> <br> <br>
-				
-				<b>Czy mam wziąć coś do jedzenia?</b> <br> <br>
-				<p>
-					Tak, weź ze sobą to co tylko zechcesz zjeść. W domkach są małe lodówki z zamrażarką. Jest kuchenka
-					indukcyjna i
-					mikrofalówka.
-					Jednak nie musisz przesadzać, mam w planie zorganizować śniadania oraz obiadokolacje, także postaram się aby
-					niczego nie zabrakło 😉
-					Mam nadzieję, że uda się zorganizować ognisko lub grill.
-				</p> <br>
-				
-				<b>Czy mam zabrać ze sobą śpiwór lub jakiś inny element do spania (poduszka, koc ...)?</b> <br> <br>
-				<p>
-					Byłoby dobrze aby każdy zabrał ze sobą coś dodatkowego do spania, w domkach są kołdry i pościele ale z uwagi
-					na to,
-					będzie to już październik, może być chłodno.
-					Na szczeście w domkach jest klmiatyzacja którą można dogrzać domki ale lepiej zabrać ze sobą więcej niż
-					mniej.
-				</p> <br>
-				
-				<b>Co z dojazdem na miejsce?</b> <br> <br>
-				<p>
-					Niestety dojazd musisz ogarnąć samodzielnie, nie mam możliwości aby kogoś podwieźć. 
-					Najlepiej zgadać sie w kilka osób i jechać razem.
-					Druga sprawa to słaby dojazd pociągiem lub autobusem, więc tylko samochód wchodzi w grę.
-				</p> <br>
+      <div class="window-content">
+        <div class="menu-bar">
+          <span class="spawn-trigger">Plik</span>
+          <span class="spawn-trigger">Edycja</span>
+          <span class="spawn-trigger">Widok</span>
+          <span class="spawn-trigger">Ulubione</span>
+          <span class="spawn-trigger">Narzędzia</span>
+          <span class="spawn-trigger">Pomoc</span>
+        </div>
+      </div>
 
-				<b>text</b> <br> <br>
-				<p>
-					opis
-				</p> <br>
-				
-				
-				
-			</div>
-		</div>
-	</main>
+      <div class="scroll-container info-scroll">
+        <div class="items-list2">
+
+          <div class="gk">
+            <b>Kiedy</b> <br>
+            <pre>    od Piątku 9.10.2026 od godziny 16:00 (najwcześniej) </pre><br>
+            <pre>    do Niedzieli 11.10.2026 do godziny 11:00 (najpóźniej) </pre><br>
+          </div>
+
+          <div class="gk">
+            <b>Gdzie</b> <br> <br>
+            <pre>    <a href="https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/" target="_blank">Borsk 194, 83-441 Borsk</a></pre>
+            <br>
+          </div>
+
+          <div class="gk">
+            <b>Kilka podstawowych zasad</b> <br> <br>
+            <p>
+              W obiekcie obowiązuje cisza nocna w godzinach 23-9.
+              Mam ogromną prośbę o przyzwoite zachowanie, żeby nie robić trzody i się nie napierdolić jak świnia!
+              Postarajmy się
+              niczego nie zniszczyć.
+              Mam nadzieję że po prostu spędzimy razem fajny weekend 😁
+            </p> <br>
+          </div>
+
+          <div class="gk">
+            <b>Sekcja Q&A</b> <br> <br>
+
+            <b>Czy mam wziąć coś do jedzenia?</b> <br> <br>
+            <p>
+              Tak, weź ze sobą to co tylko zechcesz zjeść. W domkach są małe lodówki z zamrażarką. Jest kuchenka
+              indukcyjna i
+              mikrofalówka.
+              Jednak nie musisz przesadzać, mam w planie zorganizować śniadania oraz obiadokolacje, także postaram się
+              aby
+              niczego nie zabrakło 😉
+              Mam nadzieję, że uda się zorganizować ognisko lub grill.
+            </p> <br>
+
+            <b>Czy mam zabrać ze sobą śpiwór lub jakiś inny element do spania (poduszka, koc ...)?</b> <br> <br>
+            <p>
+              Byłoby dobrze aby każdy zabrał ze sobą coś dodatkowego do spania, w domkach są kołdry i pościele ale z
+              uwagi
+              na to,
+              będzie to już październik, może być chłodno.
+              Na szczeście w domkach jest klmiatyzacja którą można dogrzać domki ale lepiej zabrać ze sobą więcej niż
+              mniej.
+            </p> <br>
+
+            <b>Co z dojazdem na miejsce?</b> <br> <br>
+            <p>
+              Niestety dojazd musisz ogarnąć samodzielnie, nie mam możliwości aby kogoś podwieźć.
+              Najlepiej zgadać sie w kilka osób i jechać razem.
+              Druga sprawa to słaby dojazd pociągiem lub autobusem, więc tylko samochód wchodzi w grę.
+            </p> <br>
+
+            <b>Czy trzeba za coś zapłacić?</b> <br> <br>
+            <p>
+              Cały nasz pobyt jest ju opłacony.
+            </p> <br>
+
+            <b>Alkohol, napoje?</b> <br> <br>
+            <p>
+              Wszszytko ogarniemy, wystarczy wypełnić ankietę WSTAW LINK CZOPKU !
+            </p> <br>
+
+            <b>Przypominam o saunie i jacuzzi!!!</b> <br> <br>
+            <p>
+              Wszyscy chętni do skorzystania z tego dobrodziejstwa powinni zabrać strój kąpielowy i jakieś ręczniki.
+            </p> <br>
+
+            <b>Co będziemy robić? Czy przygotować się na jakieś aktywności?</b> <br> <br>
+            <p>
+              Najwaniejsze abyście się dobrze bawili w gronie znajomych. Bedziemy mogli pograc w gry planszowe, przejść się na spacer itd.
+              Dobra, a teraz najwazniejsze. Jesli jeszcze nie ogarnąłeś/łaś, cała ta strona jest całkiem interaktywna.
+              Jeden z elementów zawiera pola do aktywacji systemu. Aby otrzymać kody wystarczy odnaleźć je ukryte na tej stronie, większość jest w formie zagadki. 
+              A tu łap pierwszy kod: 01PB
+              Wpisz kody, aktywuj i zobacz co dalej.
+              Miłej zabawy 😉
+            </p> <br>
+
+          </div>
+        </div>
+    </main>
+
+    <!-- =====================================================
+         Eksplorator plikow
+         ===================================================== -->
+
+    <div class="main-browser2 pliki" id="plikiId">
+
+      <div class="title-bar">
+        <div class="title-icon">📁</div>
+        <div class="title-text">Explorator plikensów</div>
+        <div class="window-buttons">
+          <button class="win-btn spawn-trigger">_</button>
+          <button class="win-btn spawn-trigger">□</button>
+          <button class="win-btn plikiExit">×</button>
+        </div>
+      </div>
+
+      <iframe src="explorer.html" width="100%" height="100%" style="border-left-width: 0px;border-left-style: solid;border-top-width: 0px;border-top-style: solid;border-right-width: 0px;border-right-style: solid;border-bottom-width: 0px;border-bottom-style: solid;" title="File explorer">
+      </iframe>
+    </div>
 
     <!-- Okno informacji -->
     <section class="window info-window">
@@ -1208,7 +524,7 @@
       <div class="info-body">
         <div class="info-symbol">i</div>
         <p>
-          Klikaj ikony na pulpicie,
+          Klikaj niektóre ikony na pulpicie,
           w menu Start i w oknie projektu.
           Każde kliknięcie tworzy
           losowy latający element.
@@ -1221,6 +537,12 @@
 
     <!-- Warstwa na wszystkie latające elementy -->
     <div class="flying-layer" id="flying-layer"></div>
+
+    <!-- Osobny komunikator GG, otwierany ikoną w pasku zadań -->
+    <div class="gg-overlay" id="gg-overlay" hidden>
+      <iframe class="gg-frame" id="gg-frame" src="gg-komunikator.html?embed=1" title="Komunikator Gadu-Gadu">
+      </iframe>
+    </div>
   </div>
 
   <!-- =====================================================
@@ -1229,32 +551,32 @@
   <div class="window start-menu" id="start-menu">
     <div class="start-side">Windows 96</div>
     <div class="start-main">
-      <button class="start-item spawn-trigger">
+      <button class="start-item mojKomputerButton" id="mojKomputerButtonId">
         <span class="glyph">🖥️</span>
         <span>Mój komputer</span>
       </button>
-      <button class="start-item spawn-trigger">
+      <button class="start-item plikiExit" id="plikiExitId">
         <span class="glyph">📁</span>
         <span>Moje dokumenty</span>
       </button>
-      <button class="start-item spawn-trigger">
+      <button class="start-item internetExplorerButton" id="internetExplorerButtonId">
         <span class="glyph">🌐</span>
         <span>Internet Explorer</span>
       </button>
-      <button class="start-item spawn-trigger">
+      <button class="start-item paintClose" id="paintCloseId">
         <span class="glyph">🎨</span>
         <span>Paint</span>
       </button>
-      <button class="start-item spawn-trigger">
+      <button class="start-item noteButton" id="noteButtonId">
         <span class="glyph">📝</span>
         <span>Notatnik</span>
       </button>
 
-	  <button class="start-item" id="saperButton">
+      <button class="start-item" id="saperButton">
         <span class="glyph">⚫</span>
         <span>Saper</span>
       </button>
-	  
+
 
       <div class="start-divider"></div>
 
@@ -1276,27 +598,53 @@
   <!-- =====================================================
        PASEK ZADAŃ
        ===================================================== -->
-	<footer class="taskbar">
-		<button class="start-button" id="start-button">
-			<span class="start-logo">▣</span> Start
-		</button>
+  <footer class="taskbar">
+    <button class="start-button" id="start-button">
+      <span class="start-logo">▣</span> Start
+    </button>
 
-		<div class="taskbar-app">🖥 Projekt 96 - Windows 96</div>
-		<div class="taskbar-app" id="mediaButton">🎶 Windows Media Player</div>
+    <div class="taskbar-app mojKomputerButton" id="mojKomputerButtonId">🖥 Projekt 96 - Windows 96</div>
+    <div class="taskbar-app mediaButton mediaPlayerButton" id="mediaButtonId">🎶 Windows Media Player</div>
 
-		<div style="display: flex;" class="clock">
+    <div class="clock">
 
 
-			<div class="ggpic">
-				<img src="images/gg.png">
-			</div>
-			<div  id="clock">23:59</div>
-		</div>
-		
+      <div class="ggpic">
+        <img src="images/gg.png" alt="Otwórz komunikator Gadu-Gadu">
+      </div>
+      <div id="clock">23:59</div>
+    </div>
 
-	</footer>
+
+  </footer>
 
   <script>
+
+    /// Dziek GG co 3 minuty, pierwsze odtworzenie po 20 sekundach
+
+    (() => {
+      const sound = new Audio("audio/gadu_gadu.mp3");
+
+      sound.preload = "auto";
+      sound.volume = 0.8;
+
+      function playSound() {
+        sound.currentTime = 0;
+
+        sound.play().catch(() => {
+          console.warn("Przeglądarka zablokowała automatyczne odtwarzanie dźwięku.");
+        });
+      }
+
+      // Pierwsze odtworzenie po 20 sekundach
+      setTimeout(() => {
+        playSound();
+
+        // Następne odtworzenia co 3 minuty
+        setInterval(playSound, 3 * 60 * 1000);
+      }, 20 * 1000);
+    })();
+
     /*
       ==========================================================
       1. DATA
@@ -1387,12 +735,7 @@
         console.error("Nie udało się pobrać data.json:", error);
 
         container.innerHTML = `
-          <div style="
-            padding:20px;
-            text-align:center;
-            color:#cc0000;
-            font:bold 12px 'Courier New',monospace;
-          ">
+          <div class="error-message-box">
             BŁĄD 0x80070002<br><br>
             Nie znaleziono pliku data.json.
           </div>
@@ -1476,6 +819,36 @@
     */
 
     let flyingId = 0;
+    let twentyCodeShown = false;
+
+    function showTwentyCode() {
+      if (twentyCodeShown) return;
+      twentyCodeShown = true;
+
+      const codeWindow = document.createElement("section");
+      codeWindow.className = "twenty-code-window";
+      codeWindow.setAttribute("role", "dialog");
+      codeWindow.setAttribute("aria-modal", "true");
+      codeWindow.innerHTML = `
+        <div class="title-bar">
+          <span class="title-icon">!</span>
+          <span class="title-text">Informacja</span>
+        </div>
+        <div class="twenty-code-body">
+          <div>Udało Ci się odblokować wszystkie moźliwe ludzkie twarze.</div>
+          <div>W nagrode masz ten oto kod:</div>
+          <div class="twenty-code-value">997P</div>
+        </div>
+        <div class="twenty-code-actions">
+          <button type="button" class="twenty-code-ok">OK</button>
+        </div>
+      `;
+
+      document.body.appendChild(codeWindow);
+      codeWindow.querySelector(".twenty-code-ok").addEventListener("click", () => {
+        codeWindow.remove();
+      });
+    }
 
     function spawnFlyingItem() {
       const layer = document.getElementById("flying-layer");
@@ -1519,6 +892,10 @@
       element.appendChild(frame);
       element.appendChild(label);
       layer.appendChild(element);
+
+      if (layer.querySelectorAll(".flying-item").length === 20) {
+        showTwentyCode();
+      }
 
       let x = Math.random() * Math.max(1, window.innerWidth - 100);
       let y = Math.random() * Math.max(1, window.innerHeight - 125);
@@ -1596,7 +973,7 @@
       flyingSpeedMultiplier += direction * 0.20;
       flyingSpeedMultiplier = Math.max(
         0.20,
-        Math.min(4.00, flyingSpeedMultiplier)
+        Math.min(6.00, flyingSpeedMultiplier)
       );
 
       updateSpeedDisplay();
@@ -1618,6 +995,13 @@
       event.stopPropagation();
       emptyTrash();
     });
+
+    /*
+      ==========================================================
+      4. wylacz muzyke
+      ==========================================================
+    */
+
 
     /*
       ==========================================================
@@ -1674,29 +1058,192 @@
         spawnFlyingItem();
       });
     });
-	
-	document.getElementById("mediaButton").addEventListener("click", (event) => {
-		event.stopPropagation();
-		const player = document.getElementById("media-player");
-  
-		if (player.style.display === "none" || player.style.display === "") {
-			player.style.display = "block";
-		} else {
-			player.style.display = "none";
-		}
+
+    document.querySelectorAll(".noteButton").forEach(trigger => {
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const player = document.getElementById("informacje");
+
+        if (player.style.display === "none" || player.style.display === "") {
+          player.style.display = "block";
+        } else {
+          player.style.display = "none";
+        }
+      });
     });
 
-	document.getElementById("saperButton").addEventListener("click", (event) => {
-		event.stopPropagation();
-		const player = document.getElementById("saperWindow");
-  
-		if (player.style.display === "none" || player.style.display === "") {
-			player.style.display = "block";
-		} else {
-			player.style.display = "none";
-		}
+    document.querySelectorAll(".plikiExit").forEach(trigger => {
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const player = document.getElementById("plikiId");
+
+        if (player.style.display === "none" || player.style.display === "") {
+          player.style.display = "block";
+        } else {
+          player.style.display = "none";
+        }
+      });
     });
 
+    // Otworz zamknij głwone okno z informacją o stronie
+
+    document.querySelectorAll(".mojKomputerButton").forEach(trigger => {
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const player = document.getElementById("mojKomputer");
+
+        if (player.style.display === "block" || player.style.display === "") {
+          player.style.display = "none";
+        } else {
+          player.style.display = "block";
+        }
+      });
+    });
+
+    /// Zamknij otwórz okno z listą potrzebnych rzeczy
+
+    document.querySelectorAll(".internetExplorerButton").forEach(trigger => {
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const player = document.getElementById("internetExplorer");
+
+        if (player.style.display === "none" || player.style.display === "") {
+          player.style.display = "block";
+        } else {
+          player.style.display = "none";
+        }
+      });
+    });
+
+    /// Zamknij otworz paint
+
+    document.querySelectorAll(".paintClose").forEach(trigger => {
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const player = document.getElementById("paintId");
+
+        if (player.style.display === "none" || player.style.display === "") {
+          player.style.display = "block";
+        } else {
+          player.style.display = "none";
+        }
+      });
+    });
+
+    const ggOverlay = document.getElementById("gg-overlay");
+    const ggFrame = document.getElementById("gg-frame");
+
+    function toggleGaduGadu(event) {
+      event.stopPropagation();
+      const isHidden = ggOverlay.hasAttribute("hidden");
+
+      if (isHidden) {
+        ggOverlay.removeAttribute("hidden");
+        ggFrame.focus();
+        ggFrame.contentWindow.postMessage({ type: "gg-open" }, "*");
+      } else {
+        ggOverlay.setAttribute("hidden", "");
+      }
+    }
+
+    document.querySelectorAll(".ggpic").forEach(icon => {
+      icon.setAttribute("role", "button");
+      icon.setAttribute("tabindex", "0");
+      icon.setAttribute("title", "Otwórz/zamknij komunikator GG");
+      icon.addEventListener("click", toggleGaduGadu);
+      icon.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") toggleGaduGadu(event);
+      });
+    });
+
+    window.addEventListener("message", event => {
+      if (event.source !== ggFrame.contentWindow) return;
+      if (event.data?.type === "gg-close") {
+        ggOverlay.setAttribute("hidden", "");
+      }
+    });
+
+    document.getElementById("saperButton").addEventListener("click", (event) => {
+      event.stopPropagation();
+      const player = document.getElementById("saperWindow");
+
+      if (player.style.display === "none" || player.style.display === "") {
+        player.style.display = "block";
+      } else {
+        player.style.display = "none";
+      }
+    });
+
+    document.querySelectorAll(".saperButton").forEach(trigger => {
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const player = document.getElementById("saperWindow");
+
+        if (player.style.display === "none" || player.style.display === "") {
+          player.style.display = "block";
+        } else {
+          player.style.display = "none";
+        }
+      });
+    });
+
+    // CD BUTTON ON OFF
+
+    document.querySelectorAll(".cdButton").forEach(trigger => {
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const player = document.getElementById("cdWindow");
+
+        if (player.style.display === "none" || player.style.display === "") {
+          player.style.display = "flex";
+        } else {
+          player.style.display = "none";
+        }
+      });
+    });
+
+    document.getElementById("closeButton1").addEventListener("click", (event) => {
+      event.stopPropagation();
+      const player = document.getElementById("bg1");
+      player.style.display = "none";
+    });
+
+    document.getElementById("closeButton2").addEventListener("click", (event) => {
+      event.stopPropagation();
+      const player = document.getElementById("bg2");
+      player.style.display = "none";
+    });
+
+    document.getElementById("closeButton3").addEventListener("click", (event) => {
+      event.stopPropagation();
+      const player = document.getElementById("bg3");
+      player.style.display = "none";
+    });
+
+    document.getElementById("closeButton4").addEventListener("click", (event) => {
+      event.stopPropagation();
+      const player = document.getElementById("bg4");
+      player.style.display = "none";
+    });
+
+    document.getElementById("closeButton5").addEventListener("click", (event) => {
+      event.stopPropagation();
+      const player = document.getElementById("bg5");
+      player.style.display = "none";
+    });
+
+    document.querySelectorAll(".mediaButton").forEach(trigger => {
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const player = document.getElementById("media-player");
+
+        if (player.style.display === "none" || player.style.display === "") {
+          player.style.display = "block";
+        } else {
+          player.style.display = "none";
+        }
+      });
+    });
 
     /*
       ==========================================================
@@ -1764,7 +1311,14 @@
         event.stopPropagation();
 
         closeStartMenu();
-		if (item.id === "saperButton") { return; }
+        if (item.id === "saperButton") { return; }
+        if (item.id === "mojKomputerButtonId") { return; }
+        if (item.id === "internetExplorerButtonId") { return; }
+        if (item.id === "noteButtonId") { return; }
+        if (item.id === "plikiExitId") { return; }
+        if (item.id === "paintCloseId") { return; }
+        
+        
         showStartError(item.querySelector("span:last-child")?.textContent.trim() || item.textContent.trim());
       });
     });
@@ -1796,7 +1350,7 @@
           </div>
         </div>
         <div class="error-body">
-          <img src="./images/tenor.gif" alt="Error GIF" class="error-gif" style="width: 48px; height: 48px; object-fit: contain; flex-shrink: 0;">
+          <img src="./images/tenor.gif" alt="Error GIF" class="error-gif">
           <p class="error-message">
             Nie można uruchomić programu:<br>
             <strong>${escapeHtml(appName)}</strong><br><br>
@@ -1840,49 +1394,7 @@
       }[char]));
     }
 
-    /*
-      ==========================================================
-      7. OKNO INFORMACYJNE
-      ==========================================================
-    */
-
-    function closeInfo() {
-      const info = document.querySelector(".info-window");
-      if (info) info.style.display = "none";
-    }
-
-    document.getElementById("close-info").addEventListener("click", closeInfo);
-    document.getElementById("ok-info").addEventListener("click", closeInfo);
-
-    /*
-      ==========================================================
-      8. ZEGAR
-      ==========================================================
-    */
-
-    function updateClock() {
-      const now = new Date();
-
-      document.getElementById("clock").textContent =
-        now.toLocaleTimeString("pl-PL", {
-          hour: "2-digit",
-          minute: "2-digit"
-        });
-    }
-
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    /*
-      ==========================================================
-      9. START
-      ==========================================================
-    */
-
-    document.addEventListener("DOMContentLoaded", () => {
-      loadItemsFromJSON();
-    });
-
   </script>
 </body>
+
 </html>

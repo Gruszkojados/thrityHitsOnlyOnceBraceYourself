@@ -1,71 +1,325 @@
 <!doctype html>
 <html lang="pl">
+
 <head>
- <meta charset="utf-8">
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <title>Saper 98</title>
- <style>
- :root { --gray:#c0c0c0; --dark:#808080; --black:#000; --white:#fff; --navy:#000080; }
- * { box-sizing:border-box; }
- body { margin:0; min-height:100vh; display:grid; place-items:center; background:transparent; font-family:"MS Sans Serif",Tahoma,sans-serif; color:#000; }
- .window { width:max-content; max-width:100%; padding:3px; background:var(--gray); border:2px solid; border-color:var(--white) var(--black) var(--black) var(--white); box-shadow:2px 2px #000; }
- .titlebar { height:22px; padding:2px 4px; display:flex; align-items:center; justify-content:space-between; color:#fff; background:var(--navy); font-size:13px; font-weight:bold; }
- .title-buttons { display:flex; gap:2px; }
- .title-button { width:16px; height:16px; display:grid; place-items:center; background:var(--gray); color:#000; border:1px solid; border-color:var(--white) var(--black) var(--black) var(--white); font-size:11px; line-height:1; }
- .menu { display:flex; gap:18px; padding:4px 5px 5px; font-size:12px; }
- .menu u { text-decoration:underline; }
- .sunken { border:2px solid; border-color:var(--dark) var(--white) var(--white) var(--dark); }
- .panel { width:max-content; max-width:100%; margin:5px; padding:10px; }
- .scoreboard { display:flex; align-items:center; justify-content:space-between; padding:6px; margin-bottom:10px; }
- .counter { min-width:52px; padding:1px 3px; color:#f00; background:#000; font:24px/27px "Courier New",monospace; letter-spacing:1px; text-align:center; }
- .face { width:32px; height:32px; padding:0; display:grid; place-items:center; background:var(--gray); border:2px solid; border-color:var(--white) var(--black) var(--black) var(--white); font-size:21px; cursor:pointer; user-select:none; }
- .face:active { border-color:var(--dark) var(--white) var(--white) var(--dark); }
- .board-wrap { padding:4px; overflow:auto; }
- .board { display:grid; grid-template-columns:repeat(9, 30px); grid-auto-rows:30px; width:max-content; background:var(--dark); }
- .cell { width:30px; height:30px; display:grid; place-items:center; background:var(--gray); border:2px solid; border-color:var(--white) var(--dark) var(--dark) var(--white); font:bold 20px Arial,sans-serif; cursor:pointer; user-select:none; }
- .cell.open { border:1px solid #808080; background:#c0c0c0; cursor:default; }
- .cell.flag::after { content:"🚩"; font-size:18px; }
- .cell.mine::after { content:"✹"; color:#000; font-size:21px; }
- .cell.exploded { background:#f00; }
- .cell.wrong::after { content:"×"; color:#f00; font-size:23px; }
- .n1{color:#00f}.n2{color:#008000}.n3{color:#f00}.n4{color:#000080}.n5{color:#800000}.n6{color:#008080}.n7{color:#000}.n8{color:#808080}
- .hint { margin:8px 3px 0; font-size:11px; text-align:center; }
- select, button { font:12px "MS Sans Serif",Tahoma,sans-serif; }
- button { padding:3px 9px; background:var(--gray); border:2px solid; border-color:var(--white) var(--black) var(--black) var(--white); }
- button:active { border-color:var(--dark) var(--white) var(--white) var(--dark); }
- @media (max-width:360px) { .window { transform-origin:center; } }
- </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Saper 98</title>
+    <style>
+        :root {
+            --gray: #c0c0c0;
+            --dark: #808080;
+            --black: #000;
+            --white: #fff;
+            --navy: #000080;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            place-items: center;
+            background: transparent;
+            font-family: "MS Sans Serif", Tahoma, sans-serif;
+            color: #000;
+        }
+
+        .window {
+            position: relative;
+            width: max-content;
+            max-width: 100%;
+            padding: 3px;
+            background: var(--gray);
+            border: 2px solid;
+            border-color: var(--white) var(--black) var(--black) var(--white);
+            box-shadow: 2px 2px #000;
+        }
+
+        .titlebar {
+            height: 22px;
+            padding: 2px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #fff;
+            background: var(--navy);
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .title-buttons {
+            display: flex;
+            gap: 2px;
+        }
+
+        .title-button {
+            width: 16px;
+            height: 16px;
+            display: grid;
+            place-items: center;
+            background: var(--gray);
+            color: #000;
+            border: 1px solid;
+            border-color: var(--white) var(--black) var(--black) var(--white);
+            font-size: 11px;
+            line-height: 1;
+        }
+
+        .menu {
+            display: flex;
+            gap: 18px;
+            padding: 4px 5px 5px;
+            font-size: 12px;
+        }
+
+        .menu u {
+            text-decoration: underline;
+        }
+
+        .sunken {
+            border: 2px solid;
+            border-color: var(--dark) var(--white) var(--white) var(--dark);
+        }
+
+        .panel {
+            width: max-content;
+            max-width: 100%;
+            margin: 5px;
+            padding: 10px;
+        }
+
+        .scoreboard {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px;
+            margin-bottom: 10px;
+        }
+
+        .counter {
+            min-width: 52px;
+            padding: 1px 3px;
+            color: #f00;
+            background: #000;
+            font: 24px/27px "Courier New", monospace;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .face {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: grid;
+            place-items: center;
+            background: var(--gray);
+            border: 2px solid;
+            border-color: var(--white) var(--black) var(--black) var(--white);
+            font-size: 21px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .face:active {
+            border-color: var(--dark) var(--white) var(--white) var(--dark);
+        }
+
+        .board-wrap {
+            padding: 4px;
+            overflow: auto;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(9, 30px);
+            grid-auto-rows: 30px;
+            width: max-content;
+            background: var(--dark);
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            background: var(--gray);
+            border: 2px solid;
+            border-color: var(--white) var(--dark) var(--dark) var(--white);
+            font: bold 20px Arial, sans-serif;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .cell.open {
+            border: 1px solid #808080;
+            background: #c0c0c0;
+            cursor: default;
+        }
+
+        .cell.flag::after {
+            content: "🚩";
+            font-size: 18px;
+        }
+
+        .cell.mine::after {
+            content: "✹";
+            color: #000;
+            font-size: 21px;
+        }
+
+        .cell.exploded {
+            background: #f00;
+        }
+
+        .cell.wrong::after {
+            content: "×";
+            color: #f00;
+            font-size: 23px;
+        }
+
+        .win-code {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            display: none;
+            place-items: center;
+            padding: 20px;
+            background: rgba(192, 192, 192, .92);
+        }
+
+        .win-code.visible {
+            display: grid;
+        }
+
+        .win-code-box {
+            padding: 18px 24px;
+            text-align: center;
+            background: var(--gray);
+            border: 2px solid;
+            border-color: var(--white) var(--black) var(--black) var(--white);
+            box-shadow: 2px 2px #000;
+        }
+
+        .win-code-title {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .win-code-value {
+            color: #000080;
+            font: bold 34px "Courier New", monospace;
+            letter-spacing: 5px;
+        }
+
+        .n1 {
+            color: #00f
+        }
+
+        .n2 {
+            color: #008000
+        }
+
+        .n3 {
+            color: #f00
+        }
+
+        .n4 {
+            color: #000080
+        }
+
+        .n5 {
+            color: #800000
+        }
+
+        .n6 {
+            color: #008080
+        }
+
+        .n7 {
+            color: #000
+        }
+
+        .n8 {
+            color: #808080
+        }
+
+        .hint {
+            margin: 8px 3px 0;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        select,
+        button {
+            font: 12px "MS Sans Serif", Tahoma, sans-serif;
+        }
+
+        button {
+            padding: 3px 9px;
+            background: var(--gray);
+            border: 2px solid;
+            border-color: var(--white) var(--black) var(--black) var(--white);
+        }
+
+        button:active {
+            border-color: var(--dark) var(--white) var(--white) var(--dark);
+        }
+
+        @media (max-width:360px) {
+            .window {
+                transform-origin: center;
+            }
+        }
+    </style>
 </head>
+
 <body>
- <main class="window" aria-label="Saper Windows 98">
- <div class="titlebar"><span>💣 Saper</span><span class="title-buttons"><span class="title-button">_</span><span class="title-button">□</span><span class="title-button" id="saperExit">×</span></span></div>
- <nav class="menu"><span><u>G</u>ra</span><span><u>O</u>pcje</span><span><u>P</u>omoc</span></nav>
- <section class="panel">
- <div class="scoreboard sunken"><div id="mines" class="counter">010</div><button id="face" class="face" aria-label="Nowa gra">🙂</button><div id="time" class="counter">000</div></div>
- <div class="board-wrap sunken"><div id="board" class="board" role="grid" aria-label="Plansza sapera"></div></div>
- </section>
- </main>
- <script>
- (() => {
- const beginner = {w:9,h:9,mines:10};
- const boardEl = document.querySelector('#board'), minesEl = document.querySelector('#mines'), timeEl = document.querySelector('#time');
- const faceEl = document.querySelector('#face');
- let state, timer;
- const pad = n => String(n).padStart(3,'0');
- const neighbors = (i) => { const {w,h} = state; const x=i%w, y=Math.floor(i/w), a=[]; for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++) if(dx||dy){const nx=x+dx,ny=y+dy;if(nx>=0&&nx<w&&ny>=0&&ny<h)a.push(ny*w+nx);} return a; };
- function newGame(){
- clearInterval(timer); const cfg=beginner; state={...cfg, cells:[], started:false, ended:false, flags:0, seconds:0};
- boardEl.style.gridTemplateColumns=`repeat(${cfg.w},30px)`; boardEl.innerHTML=''; minesEl.textContent=pad(cfg.mines); timeEl.textContent='000'; faceEl.textContent='🙂';
- for(let i=0;i<cfg.w*cfg.h;i++){ const el=document.createElement('div'); el.className='cell'; el.setAttribute('role','gridcell'); el.dataset.i=i; el.addEventListener('click',()=>open(i)); el.addEventListener('contextmenu',e=>{e.preventDefault(); flag(i);}); boardEl.appendChild(el); state.cells.push({mine:false,open:false,flag:false,n:0,el}); }
- }
- function plant(first){ const forbidden=new Set([first,...neighbors(first)]); const candidates=state.cells.map((_,i)=>i).filter(i=>!forbidden.has(i)); for(let i=candidates.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[candidates[i],candidates[j]]=[candidates[j],candidates[i]];} candidates.slice(0,state.mines).forEach(i=>state.cells[i].mine=true); state.cells.forEach((c,i)=>c.n=neighbors(i).filter(j=>state.cells[j].mine).length); }
- function start(first){ state.started=true; plant(first); timer=setInterval(()=>{state.seconds=Math.min(999,state.seconds+1);timeEl.textContent=pad(state.seconds);},1000); }
- function open(i){ const c=state.cells[i]; if(state.ended||c.open||c.flag)return; if(!state.started)start(i); if(c.mine){c.open=true;c.el.classList.add('open','mine','exploded'); finish(false);return;} flood(i); if(state.cells.filter(c=>!c.mine&&!c.open).length===0)finish(true); }
- function flood(i){ const c=state.cells[i]; if(c.open||c.flag||c.mine)return; c.open=true;c.el.classList.add('open'); if(c.n){c.el.textContent=c.n;c.el.classList.add('n'+c.n);} else neighbors(i).forEach(flood); }
- function flag(i){ const c=state.cells[i]; if(state.ended||c.open)return; c.flag=!c.flag; c.el.classList.toggle('flag',c.flag); state.flags+=c.flag?1:-1; minesEl.textContent=pad(Math.max(-99,state.mines-state.flags)); }
- function finish(win){ state.ended=true; clearInterval(timer); faceEl.textContent=win?'😎':'😵'; if(win){state.cells.forEach(c=>{if(c.mine&&!c.flag){c.flag=true;c.el.classList.add('flag');}});state.flags=state.mines;minesEl.textContent='000';} else state.cells.forEach(c=>{if(c.mine&&!c.flag){c.el.classList.add('open','mine');}else if(c.flag&&!c.mine){c.el.classList.add('open','wrong');c.el.classList.remove('flag');}}); }
- faceEl.addEventListener('click',newGame); newGame();
- })();
- </script>
+    <main class="window" aria-label="Saper Windows 98">
+        
+        <nav class="menu"><span><u>G</u>ra</span><span><u>O</u>pcje</span><span><u>P</u>omoc</span></nav>
+        <section class="panel">
+            <div class="scoreboard sunken">
+                <div id="mines" class="counter">010</div><button id="face" class="face"
+                    aria-label="Nowa gra">🙂</button>
+                <div id="time" class="counter">000</div>
+            </div>
+            <div class="board-wrap sunken">
+                <div id="board" class="board" role="grid" aria-label="Plansza sapera"></div>
+            </div>
+        </section>
+
+        <section class="win-code" id="win-code" aria-live="assertive" aria-hidden="false">
+            <div class="win-code-box">
+                <div class="win-code-title">Wygrana! Oto Twój kod:</div>
+                <div class="win-code-value">1EE7</div>
+            </div>
+        </section>
+    </main>
+    <script>
+        (() => {
+            const beginner = { w: 9, h: 9, mines: 10 };
+            const boardEl = document.querySelector('#board'), minesEl = document.querySelector('#mines'), timeEl = document.querySelector('#time');
+            const faceEl = document.querySelector('#face');
+            const winCodeEl = document.querySelector('#win-code');
+            let state, timer;
+            const pad = n => String(n).padStart(3, '0');
+            const neighbors = (i) => { const { w, h } = state; const x = i % w, y = Math.floor(i / w), a = []; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (dx || dy) { const nx = x + dx, ny = y + dy; if (nx >= 0 && nx < w && ny >= 0 && ny < h) a.push(ny * w + nx); } return a; };
+            function newGame() {
+                clearInterval(timer); const cfg = beginner; state = { ...cfg, cells: [], started: false, ended: false, flags: 0, seconds: 0 };
+                boardEl.style.gridTemplateColumns = `repeat(${cfg.w},30px)`; boardEl.innerHTML = ''; minesEl.textContent = pad(cfg.mines); timeEl.textContent = '000'; faceEl.textContent = '🙂'; winCodeEl.classList.remove('visible'); winCodeEl.setAttribute('aria-hidden', 'true');
+                for (let i = 0; i < cfg.w * cfg.h; i++) { const el = document.createElement('div'); el.className = 'cell'; el.setAttribute('role', 'gridcell'); el.dataset.i = i; el.addEventListener('click', () => open(i)); el.addEventListener('contextmenu', e => { e.preventDefault(); flag(i); }); boardEl.appendChild(el); state.cells.push({ mine: false, open: false, flag: false, n: 0, el }); }
+            }
+            function plant(first) { const forbidden = new Set([first, ...neighbors(first)]); const candidates = state.cells.map((_, i) => i).filter(i => !forbidden.has(i)); for (let i = candidates.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[candidates[i], candidates[j]] = [candidates[j], candidates[i]]; } candidates.slice(0, state.mines).forEach(i => state.cells[i].mine = true); state.cells.forEach((c, i) => c.n = neighbors(i).filter(j => state.cells[j].mine).length); }
+            function start(first) { state.started = true; plant(first); timer = setInterval(() => { state.seconds = Math.min(999, state.seconds + 1); timeEl.textContent = pad(state.seconds); }, 1000); }
+            function open(i) { const c = state.cells[i]; if (state.ended || c.open || c.flag) return; if (!state.started) start(i); if (c.mine) { c.open = true; c.el.classList.add('open', 'mine', 'exploded'); finish(false); return; } flood(i); if (state.cells.filter(c => !c.mine && !c.open).length === 0) finish(true); }
+            function flood(i) { const c = state.cells[i]; if (c.open || c.flag || c.mine) return; c.open = true; c.el.classList.add('open'); if (c.n) { c.el.textContent = c.n; c.el.classList.add('n' + c.n); } else neighbors(i).forEach(flood); }
+            function flag(i) { const c = state.cells[i]; if (state.ended || c.open) return; c.flag = !c.flag; c.el.classList.toggle('flag', c.flag); state.flags += c.flag ? 1 : -1; minesEl.textContent = pad(Math.max(-99, state.mines - state.flags)); }
+            function finish(win) { state.ended = true; clearInterval(timer); faceEl.textContent = win ? '😎' : '😵'; if (win) { state.cells.forEach(c => { if (c.mine && !c.flag) { c.flag = true; c.el.classList.add('flag'); } }); state.flags = state.mines; minesEl.textContent = '000'; winCodeEl.classList.add('visible'); winCodeEl.setAttribute('aria-hidden', 'false'); } else state.cells.forEach(c => { if (c.mine && !c.flag) { c.el.classList.add('open', 'mine'); } else if (c.flag && !c.mine) { c.el.classList.add('open', 'wrong'); c.el.classList.remove('flag'); } }); }
+            faceEl.addEventListener('click', newGame); newGame();
+        })();
+    </script>
 </body>
+
 </html>

@@ -1,0 +1,1051 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Microsoft Paint</title>
+  <style>
+    :root {
+      --gray: #d4d0c8;
+      --light: #ffffff;
+      --dark: #808080;
+      --deep: #404040;
+      --blue: #000080;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: transparent;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
+      color: #111;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 0;
+    }
+
+    .paint-app {
+      width: min(400px, 100vw);
+      height: min(500px, 100vh);
+      min-width: 280px;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--gray);
+      border: 2px solid;
+      border-color: var(--light) var(--deep) var(--deep) var(--light);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .menu-bar {
+      height: 25px;
+      flex: 0 0 25px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--dark);
+      font-size: 12px;
+      user-select: none;
+    }
+
+    .menu-bar span { cursor: default; }
+
+    .tool-bar {
+      flex: 0 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 5px 6px;
+      border-bottom: 1px solid var(--dark);
+    }
+
+    .tool-button,
+    .action-button,
+    .color-swatch,
+    .control-button {
+      background: var(--gray);
+      border: 2px solid;
+      border-color: var(--light) var(--deep) var(--deep) var(--light);
+      cursor: pointer;
+      font: 11px Tahoma, sans-serif;
+    }
+
+    .tool-button {
+      min-width: 55px;
+      height: 30px;
+      padding: 2px 5px;
+    }
+
+    .tool-button.active,
+    .color-swatch.active {
+      border-color: var(--deep) var(--light) var(--light) var(--deep);
+      background: #c0c0c0;
+    }
+
+    .tool-button:focus-visible,
+    .action-button:focus-visible,
+    .color-swatch:focus-visible,
+    .control-button:focus-visible,
+    select:focus-visible,
+    input:focus-visible {
+      outline: 1px dotted #000;
+      outline-offset: -4px;
+    }
+
+    .options-bar {
+      min-height: 39px;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 4px 6px;
+      border-bottom: 1px solid var(--dark);
+      font-size: 11px;
+    }
+
+    .color-control,
+    .size-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    #colorPicker {
+      width: 30px;
+      height: 24px;
+      padding: 1px;
+      border: 2px solid;
+      border-color: var(--deep) var(--light) var(--light) var(--deep);
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .palette {
+      display: inline-flex;
+      gap: 2px;
+    }
+
+    .color-swatch {
+      width: 17px;
+      height: 17px;
+      min-width: 17px;
+      padding: 0;
+      border-width: 2px;
+    }
+
+    .color-swatch[data-color="#000000"] { background: #000; }
+    .color-swatch[data-color="#ffffff"] { background: #fff; }
+    .color-swatch[data-color="#ff0000"] { background: #f00; }
+    .color-swatch[data-color="#00a000"] { background: #00a000; }
+    .color-swatch[data-color="#0000ff"] { background: #00f; }
+    .color-swatch[data-color="#ffff00"] { background: #ff0; }
+    .color-swatch[data-color="#ff00ff"] { background: #f0f; }
+    .color-swatch[data-color="#00ffff"] { background: #0ff; }
+    .color-swatch[data-color="#808080"] { background: #808080; }
+
+    #sizeSelect {
+      width: 58px;
+      height: 23px;
+      border: 2px solid;
+      border-color: var(--deep) var(--light) var(--light) var(--deep);
+      background: #fff;
+      font: 11px Tahoma, sans-serif;
+    }
+
+    .action-button {
+      height: 25px;
+      padding: 2px 7px;
+      margin-left: auto;
+    }
+
+    .icon-action {
+      min-width: 30px;
+      width: 30px;
+      padding: 0;
+      margin-left: 0;
+      font-size: 15px;
+      line-height: 20px;
+    }
+
+    .canvas-area {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 6px;
+      background: #808080;
+    }
+
+    .canvas-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    #paintCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border: 2px solid;
+      border-color: var(--deep) var(--light) var(--light) var(--deep);
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    #imageLayer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .floating-image {
+      position: absolute;
+      min-width: 28px;
+      min-height: 28px;
+      border: 1px dashed #000080;
+      cursor: move;
+      pointer-events: auto;
+      touch-action: none;
+      transform-origin: center center;
+    }
+
+    .floating-image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .floating-image-delete {
+      position: absolute;
+      top: -18px;
+      right: -1px;
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      color: #fff;
+      background: #000080;
+      border: 1px solid #000;
+      font: bold 12px Arial, sans-serif;
+      line-height: 14px;
+      cursor: pointer;
+    }
+
+    .floating-image-rotate {
+      position: absolute;
+      top: -18px;
+      left: -1px;
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      color: #fff;
+      background: #000080;
+      border: 1px solid #000;
+      font: bold 12px Arial, sans-serif;
+      line-height: 14px;
+      cursor: pointer;
+    }
+
+    .floating-image-resize {
+      position: absolute;
+      right: -5px;
+      bottom: -5px;
+      width: 10px;
+      height: 10px;
+      background: #fff;
+      border: 1px solid #000080;
+      cursor: nwse-resize;
+    }
+
+    .status-bar {
+      min-height: 24px;
+      flex: 0 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px;
+      border-top: 2px solid var(--light);
+      font: 10px "Courier New", monospace;
+    }
+
+    .status {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding: 2px 5px;
+      border: 1px solid;
+      border-color: var(--deep) var(--light) var(--light) var(--deep);
+    }
+
+    .status:first-child { flex: 1; }
+
+    @media (max-width: 360px) {
+      .paint-app { min-width: 0; }
+      .tool-button { min-width: 47px; padding-inline: 3px; }
+      .menu-bar { gap: 9px; }
+      .options-bar { gap: 3px; }
+      .action-button { margin-left: 0; }
+    }
+
+    .tool-button {
+      min-width: 30px;
+      width: 30px;
+      height: 27px;
+      padding: 0;
+      font-size: 16px;
+      line-height: 22px;
+    }
+
+    .drive-dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      background: rgba(0, 0, 0, .22);
+    }
+
+    .drive-dialog {
+      width: min(340px, calc(100vw - 24px));
+      background: var(--gray);
+      border: 2px solid;
+      border-color: var(--light) var(--deep) var(--deep) var(--light);
+      box-shadow: 3px 3px 0 #000;
+      font-size: 12px;
+    }
+
+    .drive-dialog-title {
+      padding: 4px 6px;
+      color: #fff;
+      background: linear-gradient(90deg, var(--blue), #3a6ea5);
+      font-weight: bold;
+    }
+
+    .drive-dialog-body { padding: 14px 12px 8px; background: var(--gray); }
+    .drive-dialog-body p { margin: 0 0 9px; }
+    .drive-dialog-link {
+      display: block;
+      overflow-wrap: anywhere;
+      padding: 5px;
+      color: #000080;
+      background: #fff;
+      border: 1px solid var(--dark);
+      font: 11px "Courier New", monospace;
+    }
+
+    .drive-dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      padding: 8px 10px;
+      border-top: 1px solid var(--light);
+    }
+
+    .drive-dialog-actions button {
+      min-width: 70px;
+      height: 26px;
+      background: var(--gray);
+      border: 2px solid;
+      border-color: var(--light) var(--deep) var(--deep) var(--light);
+      font: 11px Tahoma, sans-serif;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <main class="paint-app" aria-label="Microsoft Paint">
+    <nav class="menu-bar" aria-label="Menu programu">
+      <span>Plik</span>
+      <span>Edycja</span>
+      <span>Widok</span>
+      <span>Obraz</span>
+      <span>Kolory</span>
+    </nav>
+
+    <section class="tool-bar" aria-label="Narzędzia rysowania">
+      <button class="tool-button active" type="button" data-tool="pencil" title="Ołówek" aria-label="Ołówek">✎</button>
+      <button class="tool-button" type="button" data-tool="pen" title="Pisak" aria-label="Pisak">✒</button>
+      <button class="tool-button" type="button" data-tool="brush" title="Pędzel" aria-label="Pędzel">🖌</button>
+      <button class="tool-button" type="button" data-tool="line" title="Linia" aria-label="Linia">📏</button>
+      <button class="tool-button" type="button" data-tool="circle" title="Koło" aria-label="Koło">○</button>
+      <button class="tool-button" type="button" data-tool="rectangle" title="Prostokąt" aria-label="Prostokąt">▱</button>
+      <button class="tool-button" type="button" data-tool="bucket" title="Kubełek z farbą" aria-label="Kubełek z farbą">🪣</button>
+      <button class="tool-button" type="button" data-tool="eyedropper" title="Pipeta" aria-label="Pipeta">💉</button>
+      <button class="tool-button" type="button" data-tool="eraser" title="Gumka" aria-label="Gumka">▰</button>
+      <button class="tool-button" id="undoButton" type="button" title="Cofnij" aria-label="Cofnij" disabled>↶</button>
+      <button class="tool-button" id="redoButton" type="button" title="Ponów" aria-label="Ponów" disabled>↷</button>
+    </section>
+
+    <section class="options-bar" aria-label="Opcje rysowania">
+      <label class="color-control" for="colorPicker">Kolor:
+        <input id="colorPicker" type="color" value="#000000" title="Wybierz kolor">
+      </label>
+
+      <div class="palette" aria-label="Paleta kolorów">
+        <button class="color-swatch active" type="button" data-color="#000000" aria-label="Czarny"></button>
+        <button class="color-swatch" type="button" data-color="#ffffff" aria-label="Biały"></button>
+        <button class="color-swatch" type="button" data-color="#ff0000" aria-label="Czerwony"></button>
+        <button class="color-swatch" type="button" data-color="#00a000" aria-label="Zielony"></button>
+        <button class="color-swatch" type="button" data-color="#0000ff" aria-label="Niebieski"></button>
+        <button class="color-swatch" type="button" data-color="#ffff00" aria-label="Żółty"></button>
+        <button class="color-swatch" type="button" data-color="#ff00ff" aria-label="Różowy"></button>
+        <button class="color-swatch" type="button" data-color="#00ffff" aria-label="Cyjan"></button>
+        <button class="color-swatch" type="button" data-color="#808080" aria-label="Szary"></button>
+      </div>
+
+      <label class="size-control" for="sizeSelect">Rozmiar:
+        <select id="sizeSelect">
+          <option value="1">1 px</option>
+          <option value="2">2 px</option>
+          <option value="3" selected>3 px</option>
+          <option value="5">5 px</option>
+          <option value="8">8 px</option>
+          <option value="12">12 px</option>
+          <option value="18">18 px</option>
+        </select>
+      </label>
+
+      <button class="action-button icon-action" id="clearButton" type="button" title="Nowe, puste płótno" aria-label="Nowe, puste płótno">📄</button>
+      <button class="action-button icon-action" id="saveButton" type="button" title="Zapisz jako JPG" aria-label="Zapisz jako JPG">💾</button>
+      <button class="action-button icon-action" id="insertImageButton" type="button" title="Wstaw losowy obraz" aria-label="Wstaw losowy obraz">🖼️</button>
+    </section>
+
+    <section class="canvas-area">
+      <div class="canvas-stage">
+        <canvas id="paintCanvas" aria-label="Płótno rysowania"></canvas>
+        <div id="imageLayer" aria-label="Aktywny wstawiony obraz"></div>
+      </div>
+    </section>
+
+    <footer class="status-bar">
+      <div class="status" id="status">Ołówek | #000000</div>
+      <div class="status" id="coordinates">0, 0</div>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById("paintCanvas");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      const status = document.getElementById("status");
+      const coordinates = document.getElementById("coordinates");
+      const colorPicker = document.getElementById("colorPicker");
+      const sizeSelect = document.getElementById("sizeSelect");
+      const clearButton = document.getElementById("clearButton");
+      const saveButton = document.getElementById("saveButton");
+      const insertImageButton = document.getElementById("insertImageButton");
+      const imageLayer = document.getElementById("imageLayer");
+      const toolButtons = [...document.querySelectorAll("[data-tool]")];
+      const swatches = [...document.querySelectorAll("[data-color]")];
+
+      const toolNames = {
+        pencil: "Ołówek",
+        pen: "Pisak",
+        brush: "Pędzel",
+        line: "Linia",
+        circle: "Koło",
+        rectangle: "Prostokąt",
+        bucket: "Kubełek",
+        eyedropper: "Pipeta",
+        eraser: "Gumka"
+      };
+
+      const defaultSizes = {
+        pencil: "1",
+        pen: "3",
+        brush: "12",
+        line: "3",
+        circle: "3",
+        rectangle: "3",
+        bucket: "3",
+        eyedropper: "1",
+        eraser: "12"
+      };
+
+      // Uzupełnij tę listę nazwami plików znajdujących się w folderze images.
+      const imagePaths = [
+        "images/jaja (1).png",
+        "images/jaja (2).png",
+        "images/jaja (3).png",
+        "images/jaja (4).png",
+        "images/jaja (5).png",
+        "images/jaja (6).png",
+        "images/jaja (7).png",
+        "images/jaja (8).png",
+        "images/jaja (9).png",
+        "images/jaja (10).png"
+      ];
+
+      // Podmień ten placeholder na swój adres folderu Google Drive.
+      const googleDriveLink = "https://drive.google.com/drive/folders/1Ri6a0P7_kxCo2Ot5yJhMcCUAMQGqq10z?usp=sharing";
+
+      let currentTool = "pencil";
+      let previousTool = "pencil";
+      let currentColor = "#000000";
+      let drawing = false;
+      let startPoint = null;
+      let lastPoint = null;
+      let previewImage = null;
+      let history = [];
+      let redoHistory = [];
+      let canvasWidth = 0;
+      let canvasHeight = 0;
+      let floatingImage = null;
+
+      function setStatus(message) {
+        status.textContent = message;
+      }
+
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const width = Math.max(1, Math.floor(rect.width));
+        const height = Math.max(1, Math.floor(rect.height));
+
+        if (width === canvasWidth && height === canvasHeight) return;
+
+        const oldCanvas = document.createElement("canvas");
+        oldCanvas.width = canvas.width || width;
+        oldCanvas.height = canvas.height || height;
+
+        if (canvas.width && canvas.height) {
+          oldCanvas.getContext("2d").drawImage(canvas, 0, 0);
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        canvasWidth = width;
+        canvasHeight = height;
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, width, height);
+
+        if (oldCanvas.width > 1 && oldCanvas.height > 1 && history.length) {
+          ctx.drawImage(oldCanvas, 0, 0, oldCanvas.width, oldCanvas.height, 0, 0, width, height);
+        }
+
+        if (!history.length) saveHistory();
+      }
+
+      function saveHistory() {
+        if (!canvas.width || !canvas.height) return;
+        history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        if (history.length > 30) history.shift();
+        redoHistory = [];
+        updateHistoryButtons();
+      }
+
+      function updateHistoryButtons() {
+        const undo = document.getElementById("undoButton");
+        const redo = document.getElementById("redoButton");
+        if (undo) undo.disabled = history.length <= 1;
+        if (redo) redo.disabled = redoHistory.length === 0;
+      }
+
+      function undo() {
+        if (history.length <= 1) return;
+        redoHistory.push(history.pop());
+        ctx.putImageData(history[history.length - 1], 0, 0);
+        updateHistoryButtons();
+        setStatus("Cofnięto ostatnią zmianę");
+      }
+
+      function redo() {
+        if (!redoHistory.length) return;
+        const state = redoHistory.pop();
+        history.push(state);
+        ctx.putImageData(state, 0, 0);
+        updateHistoryButtons();
+        setStatus("Ponowiono zmianę");
+      }
+
+      function clearCanvas() {
+        if (floatingImage) removeFloatingImage();
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        saveHistory();
+        setStatus("Nowe, puste płótno");
+      }
+
+      function getPoint(event) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+          x: Math.max(0, Math.min(canvas.width - 1, Math.round((event.clientX - rect.left) * canvas.width / rect.width))),
+          y: Math.max(0, Math.min(canvas.height - 1, Math.round((event.clientY - rect.top) * canvas.height / rect.height)))
+        };
+      }
+
+      function configureStroke() {
+        const width = Number(sizeSelect.value);
+        ctx.lineWidth = width;
+        ctx.lineJoin = "round";
+        ctx.lineCap = currentTool === "pencil" ? "butt" : "round";
+        ctx.strokeStyle = currentTool === "eraser" ? "#ffffff" : currentColor;
+        ctx.globalAlpha = currentTool === "brush" ? 0.62 : 1;
+      }
+
+      function resetStrokeState() {
+        ctx.globalAlpha = 1;
+        ctx.lineWidth = 1;
+      }
+
+      function drawFreehand(point) {
+        configureStroke();
+        ctx.beginPath();
+        ctx.moveTo(lastPoint.x, lastPoint.y);
+        ctx.lineTo(point.x, point.y);
+        ctx.stroke();
+        lastPoint = point;
+      }
+
+      function drawShape(point) {
+        if (!previewImage) return;
+        ctx.putImageData(previewImage, 0, 0);
+        configureStroke();
+        ctx.beginPath();
+
+        if (currentTool === "line") {
+          ctx.moveTo(startPoint.x, startPoint.y);
+          ctx.lineTo(point.x, point.y);
+        } else if (currentTool === "rectangle") {
+          ctx.strokeRect(
+            startPoint.x,
+            startPoint.y,
+            point.x - startPoint.x,
+            point.y - startPoint.y
+          );
+        } else if (currentTool === "circle") {
+          const radius = Math.hypot(point.x - startPoint.x, point.y - startPoint.y);
+          ctx.arc(startPoint.x, startPoint.y, radius, 0, Math.PI * 2);
+        }
+
+        if (currentTool !== "rectangle") ctx.stroke();
+        resetStrokeState();
+      }
+
+      function hexToRgb(hex) {
+        const value = hex.replace("#", "");
+        return {
+          r: parseInt(value.slice(0, 2), 16),
+          g: parseInt(value.slice(2, 4), 16),
+          b: parseInt(value.slice(4, 6), 16)
+        };
+      }
+
+      function nearColor(data, index, target, tolerance) {
+        return Math.abs(data[index] - target.r) <= tolerance &&
+          Math.abs(data[index + 1] - target.g) <= tolerance &&
+          Math.abs(data[index + 2] - target.b) <= tolerance &&
+          Math.abs(data[index + 3] - 255) <= tolerance;
+      }
+
+      function floodFill(x, y) {
+        const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = image.data;
+        const startIndex = (y * canvas.width + x) * 4;
+        const target = {
+          r: data[startIndex],
+          g: data[startIndex + 1],
+          b: data[startIndex + 2],
+          a: data[startIndex + 3]
+        };
+        const fill = hexToRgb(currentColor);
+
+        if (target.r === fill.r && target.g === fill.g && target.b === fill.b && target.a === 255) {
+          return false;
+        }
+
+        const stack = [[x, y]];
+        const tolerance = 10;
+        let changed = false;
+
+        while (stack.length) {
+          const [px, py] = stack.pop();
+          if (px < 0 || py < 0 || px >= canvas.width || py >= canvas.height) continue;
+
+          const index = (py * canvas.width + px) * 4;
+          if (!nearColor(data, index, target, tolerance)) continue;
+
+          data[index] = fill.r;
+          data[index + 1] = fill.g;
+          data[index + 2] = fill.b;
+          data[index + 3] = 255;
+          changed = true;
+
+          stack.push([px + 1, py], [px - 1, py], [px, py + 1], [px, py - 1]);
+        }
+
+        if (changed) ctx.putImageData(image, 0, 0);
+        return changed;
+      }
+
+      function selectTool(tool) {
+        if (floatingImage) commitFloatingImage();
+        if (tool !== "eyedropper") previousTool = tool;
+        currentTool = tool;
+        toolButtons.forEach(button => button.classList.toggle("active", button.dataset.tool === tool));
+        if (defaultSizes[tool]) sizeSelect.value = defaultSizes[tool];
+        canvas.style.cursor = tool === "bucket" ? "cell" : tool === "eyedropper" ? "copy" : "crosshair";
+        setStatus(`${toolNames[tool]} | ${currentColor}`);
+      }
+
+      function selectColor(color) {
+        currentColor = color.toLowerCase();
+        colorPicker.value = currentColor;
+        swatches.forEach(swatch => swatch.classList.toggle("active", swatch.dataset.color === currentColor));
+        setStatus(`${toolNames[currentTool]} | ${currentColor}`);
+      }
+
+      function rgbToHex(red, green, blue) {
+        return "#" + [red, green, blue]
+          .map(value => value.toString(16).padStart(2, "0"))
+          .join("");
+      }
+
+      function pickColor(point) {
+        const pixel = ctx.getImageData(point.x, point.y, 1, 1).data;
+        selectColor(rgbToHex(pixel[0], pixel[1], pixel[2]));
+        selectTool(previousTool);
+        setStatus(`Pobrano kolor ${currentColor}`);
+      }
+
+      function removeFloatingImage() {
+        if (!floatingImage) return;
+        floatingImage.remove();
+        floatingImage = null;
+        setStatus("Usunięto aktywny obraz");
+      }
+
+      function commitFloatingImage() {
+        if (!floatingImage) return true;
+
+        const image = floatingImage.querySelector("img");
+        if (!image || !image.complete || !image.naturalWidth || !imageLayer.clientWidth || !imageLayer.clientHeight) {
+          setStatus("Obraz nie jest jeszcze gotowy do zapisania");
+          return false;
+        }
+
+        const scaleX = canvas.width / imageLayer.clientWidth;
+        const scaleY = canvas.height / imageLayer.clientHeight;
+        const x = parseFloat(floatingImage.style.left) || 0;
+        const y = parseFloat(floatingImage.style.top) || 0;
+        const width = floatingImage.offsetWidth;
+        const height = floatingImage.offsetHeight;
+        const rotation = Number(floatingImage.dataset.rotation || 0) * Math.PI / 180;
+        const centerX = (x + width / 2) * scaleX;
+        const centerY = (y + height / 2) * scaleY;
+
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(rotation);
+        ctx.drawImage(image, -width * scaleX / 2, -height * scaleY / 2, width * scaleX, height * scaleY);
+        ctx.restore();
+
+        floatingImage.remove();
+        floatingImage = null;
+        saveHistory();
+        setStatus("Obraz został dodany do rysunku");
+        return true;
+      }
+
+      function setupFloatingImage(wrapper, image) {
+        const deleteButton = wrapper.querySelector(".floating-image-delete");
+        const rotateButton = wrapper.querySelector(".floating-image-rotate");
+        const resizeHandle = wrapper.querySelector(".floating-image-resize");
+        const aspect = image.naturalWidth / image.naturalHeight || 1;
+
+        deleteButton.addEventListener("click", event => {
+          event.stopPropagation();
+          removeFloatingImage();
+        });
+
+        rotateButton.addEventListener("click", event => {
+          event.stopPropagation();
+          const rotation = (Number(wrapper.dataset.rotation || 0) + 15) % 360;
+          wrapper.dataset.rotation = rotation;
+          wrapper.style.transform = `rotate(${rotation}deg)`;
+          setStatus(`Obrócono obraz: ${rotation}°`);
+        });
+
+        wrapper.addEventListener("pointerdown", event => {
+          if (event.target === resizeHandle || event.target === deleteButton || event.target === rotateButton) return;
+          event.preventDefault();
+
+          const startX = event.clientX;
+          const startY = event.clientY;
+          const startLeft = wrapper.offsetLeft;
+          const startTop = wrapper.offsetTop;
+
+          const move = moveEvent => {
+            wrapper.style.left = `${Math.max(0, startLeft + moveEvent.clientX - startX)}px`;
+            wrapper.style.top = `${Math.max(0, startTop + moveEvent.clientY - startY)}px`;
+          };
+          const stop = () => {
+            wrapper.removeEventListener("pointermove", move);
+            wrapper.removeEventListener("pointerup", stop);
+            wrapper.removeEventListener("pointercancel", stop);
+          };
+
+          wrapper.addEventListener("pointermove", move);
+          wrapper.addEventListener("pointerup", stop, { once: true });
+          wrapper.addEventListener("pointercancel", stop, { once: true });
+        });
+
+        resizeHandle.addEventListener("pointerdown", event => {
+          event.preventDefault();
+          event.stopPropagation();
+
+          const startX = event.clientX;
+          const startWidth = wrapper.offsetWidth;
+          const startHeight = wrapper.offsetHeight;
+
+          const resize = resizeEvent => {
+            const nextWidth = Math.max(28, startWidth + resizeEvent.clientX - startX);
+            wrapper.style.width = `${nextWidth}px`;
+            wrapper.style.height = `${Math.max(28, nextWidth / aspect)}px`;
+          };
+          const stop = () => {
+            window.removeEventListener("pointermove", resize);
+            window.removeEventListener("pointerup", stop);
+            window.removeEventListener("pointercancel", stop);
+          };
+
+          window.addEventListener("pointermove", resize);
+          window.addEventListener("pointerup", stop, { once: true });
+          window.addEventListener("pointercancel", stop, { once: true });
+        });
+      }
+
+      function insertRandomImage() {
+        if (floatingImage) commitFloatingImage();
+        if (!imagePaths.length) {
+          setStatus("Brak ścieżek obrazków w imagePaths");
+          return;
+        }
+
+        const candidates = imagePaths.slice().sort(() => Math.random() - 0.5);
+        const image = new Image();
+
+        const tryCandidate = index => {
+          if (index >= candidates.length) {
+            setStatus("Nie znaleziono żadnego obrazka w folderze images");
+            return;
+          }
+
+          image.src = candidates[index];
+          image.onerror = () => tryCandidate(index + 1);
+        };
+
+        image.onload = () => {
+          const maxWidth = Math.min(170, imageLayer.clientWidth * 0.55);
+          const ratio = image.naturalHeight / image.naturalWidth || 1;
+          const width = Math.max(28, maxWidth);
+          const height = Math.max(28, width * ratio);
+          const wrapper = document.createElement("div");
+
+          wrapper.className = "floating-image";
+          wrapper.style.width = `${width}px`;
+          wrapper.style.height = `${height}px`;
+          wrapper.style.left = `${Math.max(0, (imageLayer.clientWidth - width) / 2)}px`;
+          wrapper.style.top = `${Math.max(0, (imageLayer.clientHeight - height) / 2)}px`;
+          wrapper.innerHTML = `
+            <img src="${image.src}" alt="Wstawiony obraz">
+            <button class="floating-image-rotate" type="button" title="Obróć o 15 stopni" aria-label="Obróć o 15 stopni">⟳</button>
+            <button class="floating-image-delete" type="button" title="Usuń aktywny obraz" aria-label="Usuń aktywny obraz">×</button>
+            <span class="floating-image-resize" title="Zmień rozmiar" aria-label="Zmień rozmiar"></span>
+          `;
+
+          imageLayer.appendChild(wrapper);
+          floatingImage = wrapper;
+          setupFloatingImage(wrapper, image);
+          setStatus("Obraz aktywny: przeciągnij, skaluj lub usuń");
+        };
+
+        tryCandidate(0);
+      }
+
+      function startDrawing(event) {
+        if (event.button !== undefined && event.button !== 0) return;
+        event.preventDefault();
+        resizeCanvas();
+
+        if (floatingImage) commitFloatingImage();
+
+        const point = getPoint(event);
+        coordinates.textContent = `${point.x}, ${point.y}`;
+
+        if (currentTool === "eyedropper") {
+          pickColor(point);
+          return;
+        }
+
+        if (currentTool === "bucket") {
+          if (floodFill(point.x, point.y)) {
+            saveHistory();
+            setStatus(`Wypełniono kolorem ${currentColor}`);
+          }
+          return;
+        }
+
+        drawing = true;
+        startPoint = point;
+        lastPoint = point;
+        previewImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        canvas.setPointerCapture?.(event.pointerId);
+
+        if (["pencil", "pen", "brush", "eraser"].includes(currentTool)) {
+          configureStroke();
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, Math.max(0.5, Number(sizeSelect.value) / 2), 0, Math.PI * 2);
+          ctx.fillStyle = currentTool === "eraser" ? "#ffffff" : currentColor;
+          ctx.fill();
+        }
+      }
+
+      function continueDrawing(event) {
+        const point = getPoint(event);
+        coordinates.textContent = `${point.x}, ${point.y}`;
+        if (!drawing) return;
+        event.preventDefault();
+
+        if (["pencil", "pen", "brush", "eraser"].includes(currentTool)) {
+          drawFreehand(point);
+        } else {
+          drawShape(point);
+        }
+      }
+
+      function finishDrawing(event) {
+        if (!drawing) return;
+        event?.preventDefault();
+        const point = event ? getPoint(event) : lastPoint;
+
+        if (!["pencil", "pen", "brush", "eraser"].includes(currentTool)) {
+          drawShape(point);
+        }
+
+        drawing = false;
+        previewImage = null;
+        resetStrokeState();
+        saveHistory();
+        setStatus(`${toolNames[currentTool]} | ${currentColor}`);
+        canvas.releasePointerCapture?.(event?.pointerId);
+      }
+
+      function saveAsJpg() {
+        try {
+          resizeCanvas();
+          if (floatingImage && !commitFloatingImage()) return;
+
+          const exportCanvas = document.createElement("canvas");
+          exportCanvas.width = canvas.width;
+          exportCanvas.height = canvas.height;
+          const exportContext = exportCanvas.getContext("2d");
+
+          exportContext.fillStyle = "#ffffff";
+          exportContext.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+          exportContext.drawImage(canvas, 0, 0);
+
+          const link = document.createElement("a");
+          const stamp = new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-");
+          link.download = `paint-${stamp}.jpg`;
+          link.href = exportCanvas.toDataURL("image/jpeg", 0.92);
+          link.style.display = "none";
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+
+          setStatus("Zapisano rysunek jako JPG");
+          showDriveDialog();
+        } catch (error) {
+          console.error("Nie udało się zapisać JPG:", error);
+          setStatus("Błąd zapisu JPG — sprawdź konsolę przeglądarki");
+        }
+      }
+
+      function showDriveDialog() {
+        const backdrop = document.createElement("div");
+        backdrop.className = "drive-dialog-backdrop";
+        backdrop.innerHTML = `
+          <section class="drive-dialog" role="dialog" aria-modal="true" aria-labelledby="drive-dialog-title">
+            <div class="drive-dialog-title" id="drive-dialog-title">Zapisano obraz JPG</div>
+            <div class="drive-dialog-body">
+              <p>Obraz został pobrany. Tu masz kodzik: <b>55FF</b>, a teraz dodaj rysunek do mojego Dysku Google:</p>
+              <a class="drive-dialog-link" href="${googleDriveLink}" target="_blank" rel="noopener">${googleDriveLink}</a>
+            </div>
+            <div class="drive-dialog-actions">
+              <button type="button" class="drive-open">Otwórz Dysk</button>
+              <button type="button" class="drive-ok">Zamknij</button>
+            </div>
+          </section>
+        `;
+
+        document.body.appendChild(backdrop);
+        backdrop.querySelector(".drive-open").addEventListener("click", () => {
+          window.open(googleDriveLink, "_blank", "noopener");
+        });
+        backdrop.querySelector(".drive-ok").addEventListener("click", () => backdrop.remove());
+        backdrop.addEventListener("click", event => {
+          if (event.target === backdrop) backdrop.remove();
+        });
+      }
+
+      toolButtons.forEach(button => {
+        button.addEventListener("click", () => selectTool(button.dataset.tool));
+      });
+
+      swatches.forEach(swatch => {
+        swatch.addEventListener("click", () => selectColor(swatch.dataset.color));
+      });
+
+      colorPicker.addEventListener("input", () => selectColor(colorPicker.value));
+      document.getElementById("undoButton").addEventListener("click", undo);
+      document.getElementById("redoButton").addEventListener("click", redo);
+      clearButton.addEventListener("click", clearCanvas);
+      saveButton.addEventListener("click", saveAsJpg);
+      insertImageButton.addEventListener("click", insertRandomImage);
+      canvas.addEventListener("pointerdown", startDrawing);
+      canvas.addEventListener("pointermove", continueDrawing);
+      canvas.addEventListener("pointerup", finishDrawing);
+      canvas.addEventListener("pointercancel", finishDrawing);
+      canvas.addEventListener("pointerleave", event => {
+        if (drawing && event.buttons === 0) finishDrawing(event);
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Delete" && floatingImage) {
+          event.preventDefault();
+          removeFloatingImage();
+          return;
+        }
+        if (!(event.ctrlKey || event.metaKey)) return;
+        if (event.key.toLowerCase() === "z") {
+          event.preventDefault();
+          undo();
+        } else if (event.key.toLowerCase() === "y") {
+          event.preventDefault();
+          redo();
+        }
+      });
+
+      requestAnimationFrame(() => {
+        resizeCanvas();
+        setStatus(`${toolNames[currentTool]} | ${currentColor}`);
+      });
+    })();
+  </script>
+</body>
+</html>

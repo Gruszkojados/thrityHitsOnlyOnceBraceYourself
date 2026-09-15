@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mój komputer - Windows 96</title>
+  <style>
+    :root {
+      --gray: #c0c0c0;
+      --light: #fff;
+      --dark: #808080;
+      --black: #000;
+      --blue: #000080;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0px
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .explorer {
+      background: var(--gray);
+      border: 2px solid;
+      border-color: var(--light) var(--black) var(--black) var(--light);
+      box-shadow: 3px 3px #000;
+    }
+
+    .titlebar {
+      height: 25px;
+      padding: 3px 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      background: var(--blue);
+      font-weight: bold;
+      user-select: none;
+    }
+
+    .title {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .window-buttons {
+      display: flex;
+      gap: 2px;
+    }
+
+    .win-button,
+    .classic-button {
+      background: var(--gray);
+      border: 2px solid;
+      border-color: var(--light) var(--black) var(--black) var(--light);
+      cursor: pointer;
+    }
+
+    .win-button {
+      width: 18px;
+      height: 17px;
+      padding: 0;
+      line-height: 10px;
+      font: bold 12px Arial;
+    }
+
+    .win-button:active,
+    .classic-button:active {
+      border-color: var(--black) var(--light) var(--light) var(--black);
+    }
+
+    .menu {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      padding: 0 9px;
+      border-bottom: 1px solid var(--dark);
+    }
+
+    .menu span {
+      cursor: pointer;
+    }
+
+    .menu span:hover {
+      color: #fff;
+      background: var(--blue);
+    }
+
+    .toolbar {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 7px;
+      border-bottom: 1px solid var(--dark);
+    }
+
+    .tool {
+      min-width: 48px;
+      height: 44px;
+      padding: 1px 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      font-size: 10px;
+    }
+
+    .tool:hover {
+      border-color: var(--light) var(--dark) var(--dark) var(--light);
+      background: #d8d8d8;
+    }
+
+    .tool:disabled {
+      color: #777;
+      cursor: default;
+    }
+
+    .tool-icon {
+      font-size: 21px;
+      line-height: 20px;
+    }
+
+    .address-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 7px;
+      border-bottom: 1px solid var(--dark);
+    }
+
+    .address-row label {
+      font-weight: bold;
+    }
+
+    #address {
+      flex: 1;
+      min-width: 0;
+      height: 23px;
+      padding: 2px 5px;
+      background: #fff;
+      border: 2px solid;
+      border-color: var(--dark) var(--light) var(--light) var(--dark);
+      font: 11px "Courier New", monospace;
+    }
+
+    .classic-button {
+      min-width: 70px;
+      padding: 4px 9px;
+    }
+
+    .content {
+      display: block;
+      min-height: 330px;
+    }
+
+    .items-panel {
+      min-height: 330px;
+      margin: 7px;
+      padding: 7px;
+      background: #fff;
+      border: 2px solid;
+      border-color: var(--dark) var(--light) var(--light) var(--dark);
+      overflow: auto;
+    }
+
+    .menu button {
+      padding: 1px 3px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .menu button:hover {
+      color: #fff;
+      background: var(--blue);
+    }
+
+    .items-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 4px 7px;
+      border-bottom: 1px solid var(--dark);
+      font-weight: bold;
+    }
+
+    .items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+      gap: 5px;
+      padding-top: 8px;
+      align-content: start;
+    }
+
+    .item {
+      min-height: 75px;
+      padding: 5px 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .item:hover,
+    .item.selected {
+      border-color: var(--light) var(--dark) var(--dark) var(--light);
+      background: #000080;
+      color: #fff;
+    }
+
+    .item-icon {
+      font-size: 33px;
+      line-height: 34px;
+    }
+
+    .item-name {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 11px;
+    }
+
+    .empty,
+    .error {
+      padding: 25px 8px;
+      text-align: center;
+      font: 12px "Courier New", monospace;
+    }
+
+    .error {
+      color: #900;
+    }
+
+    .statusbar {
+      min-height: 23px;
+      display: flex;
+      gap: 4px;
+      padding: 3px;
+      border-top: 2px solid var(--light);
+      font: 10px "Courier New", monospace;
+    }
+
+    .status {
+      padding: 3px 6px;
+      border: 1px solid;
+      border-color: var(--dark) var(--light) var(--light) var(--dark);
+    }
+
+    .status:first-child {
+      flex: 0 0 190px;
+    }
+
+    .status:last-child {
+      flex: 1;
+    }
+
+    @media (max-width:560px) {
+      .items-panel {
+        min-height: 260px;
+      }
+
+      .status:first-child {
+        flex-basis: 110px;
+      }
+
+      .toolbar {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="explorer" aria-label="Eksplorator plików Windows 96">
+    <nav class="menu"><span>Plik</span><span>Edycja</span><button id="toggle-hidden"
+        type="button">Widok</button><span>Ulubione</span><span>Narzędzia</span><span>Pomoc</span></nav>
+    <div class="toolbar">
+      <button class="tool" id="back" type="button" title="Wstecz"><span class="tool-icon">◀</span>Wstecz</button>
+      <button class="tool" id="forward" type="button" title="Dalej"><span class="tool-icon">▶</span>Dalej</button>
+      <button class="tool" id="up" type="button" title="Folder nadrzędny"><span class="tool-icon">⬆</span>W
+        górę</button>
+      <button class="tool" id="home" type="button" title="Folder główny"><span class="tool-icon">⌂</span>Start</button>
+      <button class="tool" id="refresh" type="button" title="Odśwież"><span class="tool-icon">↻</span>Odśwież</button>
+    </div>
+    <div class="address-row"><label for="address">Adres:</label><input id="address" value="C:\\Mój komputer"
+        autocomplete="off"><button class="classic-button" id="go" type="button">Przejdź</button></div>
+    <div class="content">
+      <section class="items-panel">
+        <div class="items-header"><span id="folder-name">Mój komputer</span><span id="item-count">0 elementów</span>
+        </div>
+        <div class="items" id="items">
+          <div class="empty">Ładowanie...</div>
+        </div>
+      </section>
+    </div>
+    <footer class="statusbar">
+      <div class="status" id="status">Gotowy</div>
+      <div class="status" id="selection">Brak zaznaczenia</div>
+    </footer>
+  </main>
+
+  <script>
+    const address = document.getElementById("address"), itemsEl = document.getElementById("items");
+    const folderName = document.getElementById("folder-name"), itemCount = document.getElementById("item-count"), status = document.getElementById("status"), selection = document.getElementById("selection");
+    let root, current, history = [], historyIndex = -1, showHidden = false;
+
+    const embeddedData = {
+      "name": "Mój komputer",
+      "type": "folder",
+      "children": [
+        {
+          "name": "Dokumenty",
+          "type": "folder",
+          "children": [
+            {
+              "name": "projekt96.txt",
+              "type": "file"
+            },
+            {
+              "name": "jakZaoraćFrajera.txt",
+              "type": "file"
+            }
+          ]
+        },
+        {
+          "name": "Zdjęcia",
+          "type": "folder",
+          "children": [
+            {
+              "name": "borsk.jpg",
+              "type": "file",
+              "path": "images/borsk.jpg"
+            },
+            {
+              "name": "gg.png",
+              "type": "file",
+              "path": "images/gg.png"
+            },
+            {
+              "name": "kompromaty",
+              "type": "folder",
+              "children": [
+                {
+                  "name": "majki_pije_denaturatRIP.gif",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "czarekapastujelisa[*].mp4",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "MarcinKildemand_CzystyWydech.jpg",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "nataliabijekaroline.jpg",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "karolinabijenatalie.jpg",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "SkierniewickieŚwiry.png",
+                  "type": "file"
+                }
+              ,
+              {
+                  "name": "MarCinINatalia_MafiaPruszkowa.png",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "BartasŁadujeJamahe.mp4",
+                  "type": "file"
+                },
+                {
+                  "name": "DisNaRatka.mp3",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "Remas_OpelAstraG_1.6_16V_RuraWydechowaZapełniona.mp4",
+                  "type": "file"
+                }
+              , 
+                {
+                  "name": "KrzychuMyjeSwojeBile_10.jpg",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "OlaJeBułki!!!!.gif",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "majkiXczaras_gdzieIdąKable?.mp4",
+                  "type": "file"
+                }
+              , 
+                {
+                  "name": "Imer_HistoriaAlternatywna.mp4",
+                  "type": "file"
+                }
+              , 
+                {
+                  "name": "CypekPrzyjechał!!!!.jpg",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "BartasVsMaciej.gif",
+                  "type": "file"
+                }
+              ,
+                {
+                  "name": "Czarekidziedogryzjera.mp4",
+                  "type": "file"
+                }
+              ,
+              {
+                "name": "WiktoriaIMajki_AllIclusiveWujaCiocia.mp4",
+                "type": "file"
+              }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Gry",
+          "type": "folder",
+          "children": [
+            {
+              "name": "CS1.6.exe",
+              "type": "file"
+            },
+            {
+              "name": "Saper 96",
+              "type": "folder",
+              "children": [
+                {
+                  "name": "saper.html",
+                  "type": "file",
+                  "path": "saper.html"
+                }
+              ]
+            },
+            {
+              "name": "zapisy",
+              "type": "folder",
+              "children": [
+                {
+                  "name": "stan-gry-01.sav",
+                  "type": "file"
+                },
+                {
+                  "name": "cs1.6.sav",
+                  "type": "file"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Internet",
+          "type": "folder",
+          "children": [
+            {
+              "name": "Ulubione",
+              "type": "folder",
+              "children": [
+                {
+                  "name": "ToByNicNieDało_MariuszPudzianowski.url",
+                  "type": "file"
+                },
+                {
+                  "name": "Winamp",
+                  "type": "file"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Kopia zapasowa",
+          "type": "folder",
+          "children": [
+            {
+              "name": "2026",
+              "type": "folder",
+              "children": [
+                {
+                  "name": "wrzesień",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "system",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "SZKOŁA",
+                          "type": "folder",
+                          "children": [
+                            {
+                              "name": "asfsdgblhadbflkjgbnerlkj",
+                              "type": "folder",
+                              "children": [
+                                {
+                                  "name": "NA PEWNO SZKOŁA",
+                                  "type": "folder",
+                                  "children": [
+                                    {
+                                      "name": "lokalne",
+                                      "type": "folder",
+                                      "children": [
+                                        {
+                                          "name": "( ͡° ͜ʖ ͡°)",
+                                          "type": "folder",
+                                          "children": [
+                                            {
+                                              "name": "stare zadania domowe !!!",
+                                              "type": "folder",
+                                              "children": [
+                                                {
+                                                  "name": "52BombaklaPusyWagonChickenNuggets",
+                                                  "type": "folder",
+                                                  "children": [
+                                                    {
+                                                      "name": "XXX",
+                                                      "type": "folder",
+                                                      "children": [
+                                                        {
+                                                          "name": "KOD:6996.json",
+                                                          "type": "file"
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Archiwum",
+          "type": "folder",
+          "children": [
+            {
+              "name": "2008",
+              "type": "folder",
+              "children": [
+                {
+                  "name": "wakacje",
+                  "type": "folder",
+                  "children": [
+                    {
+                      "name": "zdjęcia",
+                      "type": "folder",
+                      "children": [
+                        {
+                          "name": "oryginały",
+                          "type": "folder",
+                          "children": [
+                            {
+                              "name": "kamera",
+                              "type": "folder",
+                              "children": [
+                                {
+                                  "name": "nie ma tu czego szukać",
+                                  "type": "folder",
+                                  "children": [
+                                    {
+                                      "name": "partia-a",
+                                      "type": "folder",
+                                      "children": [
+                                        {
+                                          "name": "partia-b-hehehehe",
+                                          "type": "folder",
+                                          "children": [
+                                            {
+                                              "name": "odzyskane",
+                                              "type": "folder",
+                                              "children": [
+                                                {
+                                                  "name": "słoikWdupieXD_wracajNaGóręxD.mp4",
+                                                  "type": "file"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "readme.txt",
+          "type": "file"
+        }
+      ]
+    };
+
+    function childrenOf(node) { return Array.isArray(node.children) ? node.children : []; }
+    function isFolder(node) { return node.type === "folder" || Array.isArray(node.children); }
+    function iconFor(node) { if (isFolder(node)) return "📁"; const ext = node.name.split(".").pop().toLowerCase(); return ["jpg", "jpeg", "png", "gif"].includes(ext) ? "🖼️" : ext === "mp3" ? "🎵" : "📄"; }
+    // Zapamiętujemy rodzica każdego folderu iteracyjnie, bez rekurencji.
+    function attachParents(rootNode) {
+      const stack = [[rootNode, null]];
+
+      while (stack.length) {
+        const [node, parent] = stack.pop();
+        if (!node || typeof node !== "object") continue;
+        node.parent = parent;
+
+        for (const child of childrenOf(node)) {
+          stack.push([child, node]);
+        }
+      }
+    }
+
+    function pathOf(node) {
+      const path = [];
+      let currentNode = node;
+
+      while (currentNode) {
+        path.unshift(currentNode.name);
+        currentNode = currentNode.parent;
+      }
+
+      return path;
+    }
+    function pathText(node) { return "C:\\\\" + pathOf(node).join("\\\\"); }
+    function findByPath(value) { const wanted = value.replace(/^C:\\\\?/, "").split(/[\\/]/).filter(Boolean); let node = root; if (!wanted.length || wanted[0].toLowerCase() === root.name.toLowerCase()) wanted.shift(); for (const part of wanted) { node = childrenOf(node).find(child => child.name.toLowerCase() === part.toLowerCase() && isFolder(child)); if (!node) return null; } return node; }
+
+    function renderItems() { const children = childrenOf(current).filter(node => showHidden || !node.hidden); const hiddenCount = childrenOf(current).length - children.length; folderName.textContent = current.name; itemCount.textContent = `${children.length} elementów${hiddenCount ? ` (+${hiddenCount} ukrytych)` : ""}`; itemsEl.innerHTML = ""; if (!children.length) { itemsEl.innerHTML = '<div class="empty">Ten folder jest pusty.</div>'; return; } children.forEach(node => { const item = document.createElement("button"); item.className = "item"; item.type = "button"; item.innerHTML = `<span class="item-icon">${iconFor(node)}</span><span class="item-name">${escapeHtml(node.name)}${node.hidden ? " (ukryty)" : ""}</span>`; item.addEventListener("click", () => { itemsEl.querySelectorAll(".item").forEach(el => el.classList.remove("selected")); item.classList.add("selected"); selection.textContent = node.name; }); item.addEventListener("dblclick", () => { if (isFolder(node)) openFolder(node); else status.textContent = `Wybrano plik: ${node.name}`; }); itemsEl.appendChild(item); }); }
+    function openFolder(node, addHistory = true) { if (!isFolder(node)) return; current = node; if (addHistory) { history = history.slice(0, historyIndex + 1); history.push(node); historyIndex++; } address.value = pathText(node); status.textContent = "Gotowy"; selection.textContent = "Brak zaznaczenia"; renderItems(); updateButtons(); }
+    function updateButtons() { document.getElementById("back").disabled = historyIndex <= 0; document.getElementById("forward").disabled = historyIndex >= history.length - 1; document.getElementById("up").disabled = current === root; }
+    function navigateHistory(step) { const next = historyIndex + step; if (next < 0 || next >= history.length) return; historyIndex = next; openFolder(history[historyIndex], false); }
+    function goUp() { if (current === root || !current.parent) return; openFolder(current.parent); }
+    function escapeHtml(value) { return String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char])); }
+    function loadData(data) { root = Array.isArray(data) ? { name: "Mój komputer", type: "folder", children: data } : data; if (!root || !isFolder(root)) throw new Error("Nieprawidłowa struktura JSON"); attachParents(root); openFolder(root); }
+    // Explorer korzysta wyłącznie z danych zapisanych w tym pliku HTML.
+    loadData(embeddedData);
+    status.textContent = "Dane wbudowane";
+
+    document.getElementById("back").addEventListener("click", () => navigateHistory(-1));
+    document.getElementById("forward").addEventListener("click", () => navigateHistory(1));
+    document.getElementById("up").addEventListener("click", goUp);
+    document.getElementById("home").addEventListener("click", () => openFolder(root));
+    document.getElementById("refresh").addEventListener("click", () => { openFolder(current, false); status.textContent = "Odświeżono"; });
+    document.getElementById("go").addEventListener("click", () => { const node = findByPath(address.value); if (node) openFolder(node); else status.textContent = "Nie znaleziono folderu"; });
+    address.addEventListener("keydown", event => { if (event.key === "Enter") document.getElementById("go").click(); });
+    document.getElementById("toggle-hidden").addEventListener("click", event => { showHidden = !showHidden; event.currentTarget.textContent = showHidden ? "Widok: ukryj ukryte" : "Widok: pokaż ukryte"; renderItems(); status.textContent = showHidden ? "Pokazano ukryte elementy" : "Ukryto elementy oznaczone jako hidden"; });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+7 kodów :
+1. Q&A - na dole sekcji
+2. GG - czat z botem
+3. Saper wygrana
+4. Media Player - przesłuchać piosenkę do końca
+5. Latające obrazki w liczbie 20
+6. Paint narysuj i zapisz obrazek
+7. Foldery - najgłębszy folder
+
+Dodatki:
+- mapa odsyła do innej karty i wyświetla mapę Google,
+- dźwięk gg,
+- Mem error w starcie
+- Paint pozwala wkleić losowy obrazek z mordą
+- Kosz usuwa latające obrazki
+
+
+Dokończyć
+
+- Komunikat po zebraniu kodów
+- Czat w GG z botem - pytania ?
+- Jakieś memiczne wstawki by się przydały 
+- Może dodatkowe ikony w folderach
+- 
+
+Poprawic
+W paint kiedy dodaje morde to jest zwiech i potem nie da się zapisac mordy
+
+

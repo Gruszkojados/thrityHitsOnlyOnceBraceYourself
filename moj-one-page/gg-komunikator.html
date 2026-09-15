@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gadu-Gadu — Gruszkojados</title>
+  <style>
+    :root {
+      --xp-blue: #3f78c8;
+      --xp-dark-blue: #174786;
+      --gg-yellow: #ffffa8;
+      --gg-orange: #ff7d3d;
+      --win-gray: #c0c0c0;
+      --win-light: #fff;
+      --win-shadow: #808080;
+      --win-black: #000;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.08), transparent 45%),
+        #087f7f;
+      color: #111;
+      font: 13px Tahoma, Arial, sans-serif;
+    }
+
+    button, input, textarea { font: inherit; }
+
+    .launcher {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 20;
+      padding: 5px 12px 5px 8px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--win-gray);
+      border: 2px solid;
+      border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+      box-shadow: 1px 1px #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .launcher:active,
+    .win98-button:active,
+    .send-button:active {
+      border-color: var(--win-black) var(--win-light) var(--win-light) var(--win-black);
+    }
+
+    .gg-ball {
+      width: 20px;
+      height: 20px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #f5cf00;
+      color: #fff;
+      text-shadow: 1px 1px #854d00;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .chat-window {
+      position: fixed;
+      width: min(410px, calc(100vw - 20px));
+      height: min(570px, calc(100vh - 30px));
+      display: none;
+      flex-direction: column;
+      background: var(--win-gray);
+      border: 2px solid;
+      border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+      box-shadow: 3px 3px #000;
+      z-index: 10;
+    }
+
+    .chat-window.is-open { display: flex; }
+    .chat-window.is-maximized { inset: 8px; width: auto; height: auto; }
+
+    .embedded { background: transparent; }
+    .embedded .launcher { display: none; }
+    .embedded .chat-window { position: relative; }
+    .embedded .chat-window.is-maximized { position: absolute; }
+
+    .title-bar {
+      height: 25px;
+      flex: 0 0 25px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 3px 2px 5px;
+      color: #fff;
+      background: linear-gradient(#5e9de8, #1553a5 48%, #17427f 52%, #3979c5);
+      font-weight: bold;
+      user-select: none;
+    }
+
+    .title-text { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .window-buttons { display: flex; gap: 3px; }
+
+    .win98-button {
+      width: 19px;
+      height: 18px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      background: var(--win-gray);
+      border: 2px solid;
+      border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+      color: #000;
+      font: bold 13px Arial, sans-serif;
+      line-height: 12px;
+      cursor: pointer;
+    }
+
+    .win98-button.close { color: #900; }
+
+    .ad-banner {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      color: #fff;
+      background:
+        radial-gradient(circle at 78% 35%, #f8e1cc 0 9%, transparent 10%),
+        linear-gradient(110deg, #1c69b1, #6fb2eb 55%, #e9f4ff);
+      font-size: 16px;
+      font-weight: bold;
+      text-shadow: 1px 1px #245080;
+    }
+
+    .ad-banner strong { max-width: 190px; text-align: center; }
+    .ad-brand { color: #d71953; font-size: 11px; text-shadow: none; }
+
+    .conversation {
+      min-height: 150px;
+      flex: 1;
+      overflow-y: auto;
+      padding: 5px;
+      background: var(--gg-yellow);
+      border: 2px solid;
+      border-color: var(--win-shadow) var(--win-light) var(--win-light) var(--win-shadow);
+      scroll-behavior: smooth;
+    }
+
+    .message { margin: 0 0 4px; line-height: 1.22; }
+    .message strong { font-weight: bold; }
+    .message.system { color: #444; font-style: italic; }
+
+    .typing {
+      display: none;
+      margin: 2px 0 4px;
+      color: #555;
+      font-size: 11px;
+      font-style: italic;
+    }
+
+    .typing.visible { display: block; }
+
+    .format-bar {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 2px 8px;
+      color: #111;
+      background: var(--gg-orange);
+      border-top: 2px solid var(--win-light);
+      font-weight: bold;
+    }
+
+    .format-button {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .format-button:hover { color: #fff; text-shadow: 1px 1px #444; }
+
+    .message-input {
+      width: 100%;
+      min-height: 102px;
+      resize: vertical;
+      padding: 6px;
+      border: 2px solid;
+      border-color: var(--win-shadow) var(--win-light) var(--win-light) var(--win-shadow);
+      border-radius: 0;
+      outline: none;
+      background: #ffffa8;
+    }
+
+    .message-input:focus { outline: 1px dotted #000; outline-offset: -4px; }
+
+    .actions {
+      display: flex;
+      gap: 7px;
+      padding: 4px 5px;
+      background: var(--gg-orange);
+      border-top: 1px solid #93430f;
+    }
+
+    .ggpic {
+      /* Upewnij się, że div ma zdefiniowaną szerokość i wysokość */
+      width: 20px;  /* Przykładowa wielkość */
+      height: 20px; /* Przykładowa wielkość */
+      overflow: hidden; /* Opcjonalnie: ucina wszystko, co wystaje poza div */
+    }
+
+    .ggpic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Sprawia, że zdjęcie wypełnia div bez zniekształceń (może je lekko przyciąć) */
+    }
+
+    .ad-mamuski img {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      object-fit: cover; /* Sprawia, że zdjęcie wypełnia div bez zniekształceń (może je lekko przyciąć) */
+    }
+
+    .win98-button.wide { width: auto; min-width: 76px; padding: 3px 12px; }
+    .actions .send-button { margin-left: auto; }
+
+    @media (max-width: 460px) {
+      .chat-window { height: min(570px, calc(100vh - 15px)); }
+      .ad-banner { min-height: 54px; }
+    }
+  </style>
+</head>
+<body id="app-body">
+  <button class="launcher" id="open-chat" type="button">
+    <span class="gg-ball">GG</span>
+    Otwórz rozmowę
+  </button>
+
+  <main class="chat-window" id="chat-window" aria-hidden="true">
+    <header class="title-bar">
+      <div class="ggpic">
+				<img src="images/gg.png">
+			</div>
+      <span class="title-text">Gruszkojados (Alter ego Jęd...)</span>
+      <div class="window-buttons" aria-label="Sterowanie oknem">
+        <button class="win98-button" id="minimize-chat" type="button" aria-label="Minimalizuj">_</button>
+        <button class="win98-button" id="maximize-chat" type="button" aria-label="Maksymalizuj">□</button>
+        <button class="win98-button close" id="close-chat" type="button" aria-label="Zamknij">×</button>
+      </div>
+    </header>
+
+    <section class="ad-banner" aria-label="Baner">
+      <div class="ad-mamuski">
+        <img src="images/mamuski.png">
+      </div>
+    </section>
+
+    <section class="conversation" id="conversation" aria-live="polite">
+      <p class="message system">Połączono z kontaktem Gruszkojados.</p>
+      <div class="typing" id="typing">Gruszkojados pisze...</div>
+    </section>
+
+    <div class="format-bar" aria-label="Formatowanie wiadomości">
+      <button class="format-button" type="button" data-format="bold"><b>B</b></button>
+      <button class="format-button" type="button" data-format="italic"><i>I</i></button>
+      <button class="format-button" type="button" data-format="underline"><u>U</u></button>
+      <button class="format-button" type="button" data-format="color">🌈</button>
+      <button class="format-button" type="button" data-format="smile">🙂</button>
+    </div>
+
+    <textarea class="message-input" id="message-input" placeholder="Napisz wiadomość..." aria-label="Treść wiadomości"></textarea>
+
+    <footer class="actions">
+      <button class="win98-button wide send-button" id="send-message" type="button">Wyślij</button>
+      <button class="win98-button wide" id="clear-message" type="button">Wyczyść</button>
+      <button class="win98-button wide" id="close-bottom" type="button">Zamknij</button>
+    </footer>
+  </main>
+
+  <script>
+    const chatWindow = document.getElementById("chat-window");
+    const conversation = document.getElementById("conversation");
+    const messageInput = document.getElementById("message-input");
+    const typing = document.getElementById("typing");
+    let messageTimers = [];
+    let responseIndex = 0;
+
+    const scriptedMessages = [
+      "Hej! Jesteś już gotowy na wyjazd?",
+      "Mam nadzieję, że tym razem niczego nie zapomnimy 😄"
+    ];
+
+    function currentTime() {
+      return new Date().toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function scrollConversation() {
+      conversation.scrollTop = conversation.scrollHeight;
+    }
+
+    function addMessage(author, text, type = "") {
+      const message = document.createElement("p");
+      message.className = `message ${type}`.trim();
+      message.innerHTML = `<strong>${escapeHtml(author)}</strong> (${currentTime()})<br>${escapeHtml(text)}`;
+      conversation.insertBefore(message, typing);
+      scrollConversation();
+    }
+
+    function showTyping(show) {
+      typing.classList.toggle("visible", show);
+      scrollConversation();
+    }
+
+    function scheduleMessage(text, delay) {
+      const timer = window.setTimeout(() => {
+        showTyping(true);
+        const replyTimer = window.setTimeout(() => {
+          showTyping(false);
+          addMessage("Gruszkojados", text);
+        }, 2000);
+        messageTimers.push(replyTimer);
+      }, delay);
+      messageTimers.push(timer);
+    }
+
+    function startConversation() {
+      messageTimers.forEach(clearTimeout);
+      messageTimers = [];
+      
+      scheduleMessage(scriptedMessages[0], 1000);
+      scheduleMessage(scriptedMessages[1], 3000);
+    }
+
+    function chooseReply(text) {
+      const normalized = text.toLowerCase();
+      if (/\b(hej|cześć|czesc|siema|halo)\b/.test(normalized)) {
+        return "Hej! Miło Cię widzieć 😊";
+      }
+      if (normalized.includes("jak tam") || normalized.includes("co tam")) {
+        return "U mnie dobrze, trochę się pakuję i trochę panikuję 😅";
+      }
+      if (/\b(tak|jasne|pewnie|będę|bede)\b/.test(normalized)) {
+        return "Super, to jesteśmy umówieni!";
+      }
+      if (/\b(nie|nie wiem|niestety)\b/.test(normalized)) {
+        return "Szkoda 😕 Daj znać, jak coś się zmieni.";
+      }
+      const replies = [
+        "Mocne XD ale no nie o to mi chodzi",
+        "Brzmi dobrze! Napisz jeszcze, co o tym myślisz.",
+        "Dobra, ogarniemy to na miejscu 😉"
+      ];
+      return replies[responseIndex++ % replies.length];
+    }
+
+    function sendMessage() {
+      const text = messageInput.value.trim();
+      if (!text) return;
+
+      addMessage("Ja", text);
+      messageInput.value = "";
+      messageInput.focus();
+      showTyping(true);
+
+      window.setTimeout(() => {
+        showTyping(false);
+        addMessage("Gruszkojados", chooseReply(text));
+      }, 1500);
+    }
+
+    var wasOpened = false;
+
+    function openChat() {
+      chatWindow.classList.add("is-open");
+      chatWindow.setAttribute("aria-hidden", "false");
+      messageInput.focus();
+      if(!wasOpened) {
+        startConversation();
+        wasOpened = true;
+      }
+    }
+
+    function closeChat() {
+      chatWindow.classList.remove("is-open", "is-maximized");
+      chatWindow.setAttribute("aria-hidden", "true");
+      notifyParentClosed();
+    }
+
+    function notifyParentClosed() {
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: "gg-close" }, "*");
+      }
+    }
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>"']/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      }[character]));
+    }
+
+    document.getElementById("open-chat").addEventListener("click", openChat);
+    document.getElementById("close-chat").addEventListener("click", closeChat);
+    document.getElementById("close-bottom").addEventListener("click", closeChat);
+    document.getElementById("minimize-chat").addEventListener("click", () => {
+      chatWindow.classList.remove("is-open");
+      chatWindow.setAttribute("aria-hidden", "true");
+      notifyParentClosed();
+    });
+    document.getElementById("maximize-chat").addEventListener("click", () => {
+      chatWindow.classList.toggle("is-maximized");
+    });
+    document.getElementById("send-message").addEventListener("click", sendMessage);
+    document.getElementById("clear-message").addEventListener("click", () => {
+      messageInput.value = "";
+      messageInput.focus();
+    });
+    messageInput.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    document.querySelectorAll("[data-format]").forEach(button => {
+      button.addEventListener("click", () => {
+        const format = button.dataset.format;
+        if (format === "smile") messageInput.value += " 🙂";
+        if (format === "bold") messageInput.value += " **tekst**";
+        if (format === "italic") messageInput.value += " _tekst_";
+        if (format === "underline") messageInput.value += " __tekst__";
+        if (format === "color") messageInput.value += " 🌈";
+        messageInput.focus();
+      });
+    });
+
+    window.addEventListener("message", event => {
+      if (event.source !== window.parent) return;
+      if (event.data?.type === "gg-open") openChat();
+    });
+
+    if (new URLSearchParams(window.location.search).has("embed")) {
+      document.getElementById("app-body").classList.add("embedded");
+      openChat();
+    }
+  </script>
+</body>
+</html>

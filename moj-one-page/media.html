@@ -10,8 +10,6 @@
         box-sizing: border-box;
     }
 
-    
-
     /* GŁÓWNE OKNO */
     .media-player {
         width: 520px;
@@ -135,6 +133,7 @@
 
     /* PLACEHOLDER JEŚLI NIE MA GIF */
     .gif-placeholder {
+        display: none;
         color: #00ff66;
         text-align: center;
         font-family: "Courier New", monospace;
@@ -250,6 +249,19 @@
     object-fit: cover;
 }
 
+    .completion-code {
+        display: none;
+        color: #00ff66;
+        text-align: center;
+        font: bold 48px "Courier New", monospace;
+        letter-spacing: 8px;
+        text-shadow: 0 0 8px rgba(0, 255, 102, .65);
+    }
+
+    .completion-code.visible {
+        display: block;
+    }
+
     .volume input {
         width: 80px;
     }
@@ -283,24 +295,50 @@
             max-height: 285px;
         }
     }
+
+    /* TRYB IFRAME: odtwarzacz wypełnia całe okno rodzica. */
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    body {
+        display: block;
+    }
+
+    .media-player {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        box-shadow: none;
+    }
+
+    .media-player > .title-bar,
+    .media-player > .menu-bar,
+    .media-player > .track-info,
+    .media-player > .progress-area,
+    .media-player > .controls,
+    .media-player > .status-bar {
+        flex: 0 0 auto;
+    }
+
+    .media-player > .screen {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+    }
 </style>
 </head>
 
 <body>
 
 <div class="media-player">
-
-    <!-- BELKA -->
-    <div class="title-bar">
-        <div class="title-icon">🎵</div>
-        <div class="title-text">Windows Media Player</div>
-
-        <div class="window-buttons">
-            <button class="window-button">_</button>
-            <button class="window-button">□</button>
-            <button class="window-button">×</button>
-        </div>
-    </div>
 
     <!-- MENU -->
     <div class="menu-bar">
@@ -332,13 +370,14 @@
             <div
                 class="gif-placeholder"
                 id="gif-placeholder"
-                style="display:none;"
             >
                 [ BRAK PLIKU GIF ]<br>
                 <br>
                 Wstaw tutaj:<br>
                 media/player.gif
             </div>
+
+            <div class="completion-code" id="completion-code" aria-live="polite"></div>
 
         </div>
 
@@ -438,6 +477,33 @@
     const time =
         document.getElementById("time");
 
+    const gifContainer =
+        document.querySelector(".gif-container");
+
+    const gifImage =
+        gifContainer.querySelector("img");
+
+    const gifPlaceholder =
+        document.getElementById("gif-placeholder");
+
+    const completionCode =
+        document.getElementById("completion-code");
+
+    function resetCompletionCode() {
+        completionCode.classList.remove("visible");
+        completionCode.textContent = "";
+        gifImage.style.display = "";
+        gifPlaceholder.style.display = "none";
+    }
+
+    function showCompletionCode() {
+        const code = "2IE7";
+        gifImage.style.display = "none";
+        gifPlaceholder.style.display = "none";
+        completionCode.textContent = code;
+        completionCode.classList.add("visible");
+    }
+
 
     /*
      * START / PAUZA
@@ -446,6 +512,11 @@
     playStopButton.addEventListener("click", () => {
 
         if (audio.paused) {
+
+            if (audio.ended) {
+                audio.currentTime = 0;
+                resetCompletionCode();
+            }
 
             audio.play()
                 .then(() => {
@@ -505,6 +576,8 @@
 
         progressFill.style.width =
             "0%";
+
+        resetCompletionCode();
 
         status.textContent =
             "Zatrzymano";
@@ -588,8 +661,9 @@
         status.textContent =
             "Utwór zakończony";
 
-        progressFill.style.width =
-            "0%";
+        progressFill.style.width = "100%";
+
+        showCompletionCode();
 
     });
 
@@ -640,9 +714,23 @@
 
     }
 
+    window.addEventListener("message", event => {
+    if (event.data?.type !== "media-stop") return;
+
+        audio.pause();
+        audio.currentTime = 0;
+
+        playStopButton.textContent = "▶ START";
+        playStopButton.classList.remove("playing");
+
+        progressFill.style.width = "0%";
+        status.textContent = "Zatrzymano";
+
+        resetCompletionCode();
+    });
+
 
 </script>
 
 </body>
 </html>
-```

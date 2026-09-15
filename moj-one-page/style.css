@@ -1,0 +1,1183 @@
+    :root {
+      --desktop: #008080;
+      --gray: #c0c0c0;
+      --white: #ffffff;
+      --light: #dfdfdf;
+      --dark: #808080;
+      --black: #000000;
+      --blue: #000080;
+      --blue2: #1084d0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+
+      color: #000;
+      font-family: "MS Sans Serif", Tahoma, Arial, sans-serif;
+      font-size: 13px;
+      overflow-x: hidden;
+      padding-bottom: 34px;
+      background-image: url("images/xp-wallpaper.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ---------- klasyczne okno ---------- */
+    .window {
+      background: var(--gray);
+      border: 2px solid;
+      border-top-color: var(--white);
+      border-left-color: var(--white);
+      border-right-color: var(--black);
+      border-bottom-color: var(--black);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .title-bar {
+      height: 23px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 3px;
+      color: #fff;
+      background: var(--blue);
+      font-weight: bold;
+      user-select: none;
+    }
+
+    .title-icon {
+      width: 16px;
+      height: 16px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 16px;
+      background: #c0c0c0;
+      color: #000080;
+      border: 1px solid #000;
+      font-size: 10px;
+    }
+
+    .title-text {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .window-buttons {
+      display: flex;
+      gap: 2px;
+    }
+
+    .win-btn {
+      width: 18px;
+      height: 17px;
+      padding: 0;
+      background: var(--gray);
+      border: 2px solid;
+      border-top-color: #fff;
+      border-left-color: #fff;
+      border-right-color: #000;
+      border-bottom-color: #000;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      line-height: 11px;
+    }
+
+    .win-btn:active,
+    .classic-btn:active,
+    .taskbar-btn:active {
+      border-top-color: #000;
+      border-left-color: #000;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    .ggpic {
+      /* Upewnij się, że div ma zdefiniowaną szerokość i wysokość */
+      width: 100%;
+      /* Przykładowa wielkość */
+      height: 100%;
+      /* Przykładowa wielkość */
+      overflow: hidden;
+      /* Opcjonalnie: ucina wszystko, co wystaje poza div */
+      cursor: pointer;
+    }
+
+    .nfspic {
+      /* Upewnij się, że div ma zdefiniowaną szerokość i wysokość */
+      width: 80%;
+      /* Przykładowa wielkość */
+      height: 100%;
+      /* Przykładowa wielkość */
+      overflow: hidden;
+      /* Opcjonalnie: ucina wszystko, co wystaje poza div */
+      cursor: pointer;
+    }
+
+    .nfspic img {
+      width: 80%;
+      height: 100%;
+      object-fit: cover;
+      /* Sprawia, że zdjęcie wypełnia div bez zniekształceń (może je lekko przyciąć) */
+    }
+
+    .ggpic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Sprawia, że zdjęcie wypełnia div bez zniekształceń (może je lekko przyciąć) */
+    }
+
+    /* ---------- pulpit ---------- */
+    .desktop {
+      min-height: calc(100vh - 34px);
+      position: relative;
+      padding: 16px 18px 55px;
+    }
+
+    .desktop-icons {
+      position: fixed;
+      left: 10px;
+      top: 12px;
+      width: 82px;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      z-index: 40;
+    }
+
+    .desktop-icon {
+      width: 82px;
+      padding: 3px;
+      color: #fff;
+      text-align: center;
+      text-shadow: 1px 1px #000;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .desktop-icon:hover {
+      background: #000080;
+    }
+
+    .desktop-icon .icon {
+      height: 39px;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      text-shadow: none;
+      filter: drop-shadow(1px 1px #000);
+    }
+
+    .desktop-icon span {
+      display: block;
+      line-height: 13px;
+    }
+
+
+    /* ---------- małe okna w tle ---------- */
+    .background-windows {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .bg-browser {
+      position: absolute;
+      opacity: 1;
+      transform: none !important;
+      overflow: hidden;
+    }
+
+    .bg-browser .browser-body {
+      height: calc(100% - 23px);
+      padding: 7px;
+      background: #c0c0c0;
+    }
+
+    .bg-browser .fake-address {
+      height: 20px;
+      margin-bottom: 6px;
+      padding: 2px 5px;
+      background: #fff;
+      border: 2px solid;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+      font: 10px "Courier New", monospace;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .bg-browser .jpg-view {
+      width: 100%;
+      height: calc(100% - 26px);
+      min-height: 80px;
+      background: #fff;
+      border: 2px solid;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .jpg-link {
+      cursor: pointer;
+    }
+
+    .bg-browser .jpg-view img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .jpg-placeholder {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 12px;
+      background:
+        repeating-linear-gradient(0deg,
+          #fff 0 9px,
+          #eee 9px 10px);
+      color: #000080;
+      font: bold 11px/1.35 "Courier New", monospace;
+    }
+
+    .bg1 {
+      left: 200px;
+      top: 48px;
+      width: 500px;
+      height: 400px;
+    }
+
+    .bg2 {
+      right: 45px;
+      top: 78px;
+      width: 650px;
+      height: 600px;
+    }
+
+    .bg3 {
+      left: 300px;
+      top: 470px;
+      width: 810px;
+      height: 475px;
+    }
+
+    .bg4 {
+      right: 300px;
+      top: 540px;
+      width: 600px;
+      height: 400px;
+    }
+
+    .bg5 {
+      left: 20px;
+      top: 600px;
+      width: 200px;
+      height: 300px;
+    }
+
+    .bg6 {
+      right: -30px;
+      top: 100px;
+      width: 317px;
+      height: 430px;
+      margin-right: 50px;
+    }
+
+    .bg7 {
+      left: 100px;
+      top: 100px;
+      width: 600px;
+      height: 600px;
+    }
+
+    .bg8 {
+      left: calc(30% - 200px);
+      top: 100px;
+      width: 400px;
+      height: 530px;
+    }
+
+    /* ---------- okno błędu uruchamianego z menu Start ---------- */
+    .error-window {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      width: min(390px, calc(100vw - 24px));
+      transform: translate(-50%, -50%);
+      z-index: 23000;
+    }
+
+    .error-body {
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: #c0c0c0;
+    }
+
+    .error-symbol {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 38px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: #cc0000;
+      border: 2px solid;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+      font: bold 26px Arial, sans-serif;
+    }
+
+    .error-message {
+      font: 12px/1.45 "Courier New", monospace;
+    }
+
+    .error-actions {
+      padding: 0 14px 14px;
+      text-align: center;
+      background: #c0c0c0;
+    }
+
+    /* ---------- główna przeglądarka ---------- */
+    .main-browser {
+      position: relative;
+      z-index: 10;
+      width: min(700px, calc(100% - 125px));
+      margin: 0 auto;
+    }
+
+    .main-browser2 {
+      position: relative;
+      z-index: 10;
+      width: min(700px, calc(100% - 125px));
+      margin: 10px auto;
+      height: 550px;
+    }
+
+    .pliki {
+      min-height: auto;
+    }
+
+    .menu-bar {
+      height: 25px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 0 8px;
+      background: #c0c0c0;
+      border-bottom: 1px solid #808080;
+    }
+
+    .menu-bar span {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .menu-bar span:hover {
+      background: #000080;
+      color: #fff;
+    }
+
+    .toolbar {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 6px;
+      border-bottom: 1px solid #808080;
+    }
+
+    .toolbar-icon {
+      width: 48px;
+      height: 43px;
+      padding: 2px;
+      background: transparent;
+      border: 1px solid transparent;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .toolbar-icon:hover {
+      border-top-color: #fff;
+      border-left-color: #fff;
+      border-right-color: #808080;
+      border-bottom-color: #808080;
+      background: #d0d0d0;
+    }
+
+    .toolbar-icon .glyph {
+      font-size: 21px;
+      line-height: 20px;
+    }
+
+    .address-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 7px;
+      border-bottom: 1px solid #808080;
+    }
+
+    a {
+      font-weight: bold;
+      color: #2563eb;
+      text-decoration: none;
+      transition: 0.2s;
+      display: inline-block;
+      /* Wymagane, aby transformacja zadziałała */
+    }
+
+    a:hover {
+      color: #1d4ed8;
+      transform: translateY(-2px);
+      /* Delikatny skok w górę */
+    }
+
+    .gk {
+      border: dotted 1px black;
+      margin: 2px;
+      padding: 2px;
+    }
+
+    .address {
+      flex: 1;
+      height: 22px;
+      padding: 2px 5px;
+      background: #fff;
+      border: 2px solid;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+      font: 11px "Courier New", monospace;
+    }
+
+    .classic-btn {
+      min-width: 70px;
+      padding: 4px 9px;
+      background: #c0c0c0;
+      border: 2px solid;
+      border-top-color: #fff;
+      border-left-color: #fff;
+      border-right-color: #000;
+      border-bottom-color: #000;
+      cursor: pointer;
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      min-height: 200px;
+      padding: 35px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-inner {
+      width: 100%;
+    }
+
+    .hero-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .hero-icon {
+      font-size: 48px;
+      width: 62px;
+      flex: 0 0 62px;
+      text-align: center;
+      filter: drop-shadow(1px 1px #000);
+    }
+
+    h1 {
+      font: bold 38px/1.1 "Courier New", monospace;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      max-width: 650px;
+      font: 14px/1.6 "Courier New", monospace;
+    }
+
+    .separator {
+      margin: 25px 0 14px;
+      border-top: 1px solid #808080;
+      border-bottom: 1px solid #fff;
+    }
+
+    .scroll-link {
+      color: #0000ee;
+      font: bold 13px "Courier New", monospace;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* ---------- lista ---------- */
+    #lista {
+      display: none;
+    }
+
+    #mojKomputerButtonId {
+      cursor: pointer;
+    }
+
+    #internetExplorer {
+      display: none;
+    }
+
+    #informacje {
+      display: none;
+    }
+
+    #paintId {
+      display: none;
+    }
+
+    .list-window {
+      position: relative;
+      z-index: 10;
+      width: min(900px, calc(100% - 100px));
+      margin: 25px auto 0;
+    }
+
+    .window-content {
+      padding: 10px;
+      background: #c0c0c0;
+    }
+
+    .project-icons {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 10px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid #808080;
+    }
+
+    .project-icon {
+      width: 67px;
+      min-height: 54px;
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 10px;
+    }
+
+    .project-icon:hover {
+      border-top-color: #fff;
+      border-left-color: #fff;
+      border-right-color: #808080;
+      border-bottom-color: #808080;
+      background: #d8d8d8;
+    }
+
+    .project-icon .glyph {
+      display: block;
+      font-size: 24px;
+      line-height: 25px;
+    }
+
+    .items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #fff;
+      padding: 7px;
+      border: 2px solid;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    .items-list2 {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #fff;
+      padding: 7px;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    .item-card {
+      min-height: 42px;
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      background: #c0c0c0;
+      border: 2px solid;
+      border-top-color: #fff;
+      border-left-color: #fff;
+      border-right-color: #808080;
+      border-bottom-color: #808080;
+      font: 13px "Courier New", monospace;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .25s linear, transform .25s linear;
+    }
+
+    .item-card::before {
+      content: "📄";
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      margin-right: 10px;
+    }
+
+    .item-card:hover {
+      background: #000080;
+      color: #fff;
+    }
+
+    .item-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .item-card.completed {
+      color: #008000;
+      background: #dfdfdf;
+      text-decoration: line-through;
+    }
+
+    .item-card.completed::before {
+      content: "☑";
+    }
+
+    .status-bar {
+      display: flex;
+      gap: 4px;
+      margin-top: 7px;
+      font: 10px "Courier New", monospace;
+    }
+
+    .status {
+      padding: 4px 6px;
+      border: 1px solid;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    .status:first-child {
+      width: 35%;
+    }
+
+    .status:last-child {
+      flex: 1;
+    }
+
+    /* ---------- start ---------- */
+    .start-menu {
+      position: fixed;
+      left: 3px;
+      bottom: 33px;
+      width: 270px;
+      display: none;
+      z-index: 20000;
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .start-menu.open {
+      display: flex;
+    }
+
+    .start-side {
+      width: 31px;
+      background: #000080;
+      color: #fff;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      padding: 7px 4px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    .start-main {
+      flex: 1;
+      background: #c0c0c0;
+      padding: 4px;
+    }
+
+    .start-item {
+      width: 100%;
+      min-height: 40px;
+      padding: 5px 7px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: transparent;
+      border: 0;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .start-item:hover {
+      color: #fff;
+      background: #000080;
+    }
+
+    .start-item .glyph {
+      width: 30px;
+      text-align: center;
+      font-size: 23px;
+    }
+
+    .start-divider {
+      height: 1px;
+      margin: 4px 2px;
+      border-top: 1px solid #808080;
+      border-bottom: 1px solid #fff;
+    }
+
+    /* ---------- latające placeholdery ---------- */
+    .flying-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 15000;
+      overflow: hidden;
+    }
+
+    .flying-item {
+      position: absolute;
+      width: 88px;
+      height: 88px;
+      pointer-events: auto;
+      cursor: pointer;
+      user-select: none;
+      transform-origin: center;
+    }
+
+    .flying-item .flying-frame {
+      width: 100%;
+      height: 100%;
+      padding: 5px;
+      border: 2px solid;
+      border-top-color: #fff;
+      border-left-color: #fff;
+      border-right-color: #000;
+      border-bottom-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .flying-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      image-rendering: auto;
+    }
+
+    .png-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5px;
+      background: #fff;
+      border: 1px dotted #000;
+      color: #000080;
+      font: bold 10px/1.2 "Courier New", monospace;
+    }
+
+    .flying-label {
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: -17px;
+      padding: 2px 3px;
+      background: #000080;
+      color: #fff;
+      font: 9px "Courier New", monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+
+    .flying-item.spinning {
+      animation: spin-and-stop 1.25s cubic-bezier(.15, .8, .25, 1) forwards;
+    }
+
+    @keyframes spin-and-stop {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      18% {
+        transform: rotate(180deg);
+      }
+
+      38% {
+        transform: rotate(540deg);
+      }
+
+      58% {
+        transform: rotate(900deg);
+      }
+
+      76% {
+        transform: rotate(1160deg);
+      }
+
+      90% {
+        transform: rotate(1270deg);
+      }
+
+      100% {
+        transform: rotate(1260deg);
+      }
+    }
+
+    /* ---------- informacja ---------- */
+    .info-window {
+      position: fixed;
+      right: 20px;
+      bottom: 48px;
+      width: 225px;
+      z-index: 120;
+    }
+
+    .info-body {
+      padding: 12px;
+      background: #c0c0c0;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .info-symbol {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #000;
+      border-radius: 50%;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      color: #000080;
+      font-weight: bold;
+      font-size: 22px;
+      flex: 0 0 32px;
+    }
+
+    .info-body p {
+      font: 11px/1.4 "Courier New", monospace;
+    }
+
+    .info-actions {
+      padding: 0 0 10px;
+      background: #c0c0c0;
+      text-align: center;
+    }
+
+    /* ---------- taskbar ---------- */
+    .taskbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 34px;
+      padding: 3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #c0c0c0;
+      border-top: 2px solid #fff;
+      z-index: 21000;
+    }
+
+    .start-button {
+      height: 27px;
+      min-width: 79px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px;
+      background: #c0c0c0;
+      border: 2px solid;
+      border-top-color: #fff;
+      border-left-color: #fff;
+      border-right-color: #000;
+      border-bottom-color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .start-button.active {
+      border-top-color: #000;
+      border-left-color: #000;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    .start-logo {
+      font-size: 16px;
+    }
+
+    .taskbar-app {
+      height: 27px;
+      min-width: 190px;
+      max-width: 290px;
+      padding: 4px 9px;
+      border: 2px solid;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #cdWindow {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    #media-player {
+      display: none;
+    }
+
+    #mojKomputer {
+      display: block;
+    }
+
+    #plikiId {
+      display: none;
+    }
+
+    #cdButton {
+      display: none;
+    }
+
+    #mediaButtonId {
+      cursor: pointer;
+    }
+
+    #saperWindow {
+      display: none;
+    }
+
+    #cdWindow {
+      display: none;
+    }
+
+    .gg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 30000;
+      display: grid;
+      place-items: center;
+
+    }
+
+    #cdWindow {
+      flex-direction: column;
+
+      width: 700px;
+      height: 540px;
+
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    #cdWindow .title-bar {
+      flex: 0 0 auto;
+    }
+
+    #cdWindow .installer-frame {
+      flex: 1 1 auto;
+
+      width: 100%;
+      height: auto;
+      min-height: 0;
+
+      border: 0;
+    }
+
+    .gg-overlay[hidden] {
+      display: none;
+    }
+
+    .gg-frame {
+      width: min(430px, calc(100vw - 20px));
+      height: min(610px, calc(100vh - 20px));
+      border: 0;
+      background: transparent;
+    }
+
+    .clock {
+      margin-left: auto;
+      min-width: 72px;
+      height: 27px;
+      display: flex;
+      align-items: center;
+      padding: 5px 8px;
+      text-align: center;
+      border: 2px solid;
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #fff;
+      border-bottom-color: #fff;
+      font: 11px "Courier New", monospace;
+    }
+
+    .iframe-frame {
+      display: block;
+      border: 0;
+    }
+
+    .scroll-container {
+      padding: 10px;
+      background: #fff;
+      overflow-y: auto;
+    }
+
+    .items-scroll {
+      max-height: 300px;
+    }
+
+    .info-scroll {
+      max-height: 200px;
+    }
+
+    .loading-message {
+      padding: 15px;
+      text-align: center;
+      font-family: "Courier New", monospace;
+    }
+
+    .error-message-box {
+      padding: 20px;
+      text-align: center;
+      color: #cc0000;
+      font: bold 12px "Courier New", monospace;
+    }
+
+    .error-gif {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .mediaPlayer {
+      display: flex;
+      flex-direction: column;
+      width: 430px;
+      height: 500px;
+      overflow: hidden;
+    }
+
+    .mediaPlayer iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      border: 0;
+    }
+
+    @media (max-width: 760px) {
+      .desktop {
+        padding: 8px 8px 55px;
+      }
+
+      .desktop-icons {
+        display: none;
+      }
+
+      .main-browser,
+      .list-window {
+        width: 100%;
+      }
+
+      .bg-browser {
+        display: none;
+      }
+
+      .hero {
+        padding: 25px 18px;
+      }
+
+      .hero-icon {
+        display: none;
+      }
+
+      .address-row {
+        display: none;
+      }
+
+      .menu-bar {
+        gap: 12px;
+        overflow-x: auto;
+      }
+
+      .toolbar {
+        overflow-x: auto;
+      }
+
+      .info-window {
+        right: 7px;
+        bottom: 43px;
+        transform: scale(.85);
+        transform-origin: bottom right;
+      }
+
+      .taskbar-app {
+        min-width: 0;
+        flex: 1;
+      }
+    }
