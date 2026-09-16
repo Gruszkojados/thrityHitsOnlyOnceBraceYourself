@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Windows XP startup</title>
+  <style>
+    :root {
+      --xp-blue: #245edb;
+      --xp-blue-dark: #12388f;
+      --xp-light: #eef5ff;
+      --xp-orange: #f7941d;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+      font-family: Tahoma, Arial, sans-serif;
+    }
+
+    .xp-screen {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    .boot-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+
+    .boot-logo {
+      position: relative;
+      width: 205px;
+      height: 120px;
+      margin: 0 0 68px;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+    }
+
+    .boot-logo .microsoft {
+      position: absolute;
+      top: 66px;
+      left: 0;
+      font-size: 11px;
+      font-weight: normal;
+    }
+
+    .boot-logo .windows {
+      position: absolute;
+      top: 76px;
+      left: 0;
+      font-size: 39px;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .boot-logo .xp {
+      position: absolute;
+      top: 84px;
+      right: 0;
+      color: #ff6b21;
+      font-size: 22px;
+      font-style: italic;
+    }
+
+    .boot-flags {
+      position: absolute;
+      top: 0;
+      left: 78px;
+      display: grid;
+      grid-template-columns: 28px 28px;
+      grid-template-rows: 28px 28px;
+      gap: 2px;
+      transform: skewY(-10deg) rotate(-8deg);
+    }
+
+    .boot-flags i,
+    .xp-flags i { display: block; }
+
+    .boot-flags i:nth-child(1),
+    .xp-flags i:nth-child(1) { background: #f04422; }
+    .boot-flags i:nth-child(2),
+    .xp-flags i:nth-child(2) { background: #6dbb45; }
+    .boot-flags i:nth-child(3),
+    .xp-flags i:nth-child(3) { background: #2384cd; }
+    .boot-flags i:nth-child(4),
+    .xp-flags i:nth-child(4) { background: #f4ce24; }
+
+    .boot-progress-frame {
+      width: 100px;
+      height: 12px;
+      padding: 1px;
+      border: 1px solid #969696;
+      border-radius: 3px;
+      background: #050505;
+      box-shadow: inset 0 0 0 1px #353535;
+    }
+
+    .boot-progress-track {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #070707;
+    }
+
+    .boot-progress-blocks {
+      display: flex;
+      gap: 1px;
+      width: max-content;
+      height: 100%;
+      animation: bootBlocks 1.15s linear infinite;
+    }
+
+    .boot-progress-blocks i {
+      display: block;
+      width: 7px;
+      height: 100%;
+      background: linear-gradient(90deg, #3155ec, #717df4 48%, #2639c7);
+    }
+
+    @keyframes bootBlocks {
+      from { transform: translateX(-40px); }
+      to { transform: translateX(100px); }
+    }
+
+    .boot-status { display: none; }
+
+    .login-screen {
+      display: none;
+      flex-direction: column;
+      background: #3b81ef;
+      opacity: 0;
+      transition: opacity .45s ease;
+    }
+
+    .login-screen.visible {
+      display: flex;
+      opacity: 1;
+    }
+
+    .welcome-screen {
+      display: none;
+      flex-direction: column;
+      background: #3b81ef;
+    }
+
+    .welcome-screen.visible {
+      display: flex;
+      opacity: 1;
+    }
+
+    .welcome-top {
+      height: 12.5%;
+      flex: 0 0 12.5%;
+      border-bottom: 2px solid rgba(255,255,255,.18);
+      background: #1f32b3;
+    }
+
+    .welcome-main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 50% 1px 50%;
+      align-items: center;
+      padding: 0;
+      background: linear-gradient(110deg, #3d84f2 0%, #3d83ee 50%, #2d70df 100%);
+    }
+
+    .welcome-word {
+      justify-self: center;
+      color: #f5f7ff;
+      font-size: clamp(43px, 8vw, 78px);
+      font-style: italic;
+      font-weight: bold;
+      letter-spacing: -4px;
+      text-shadow: 2px 3px 2px rgba(38,61,145,.24);
+    }
+
+    .welcome-divider {
+      width: 1px;
+      height: 100%;
+      background: rgba(255,255,255,.14);
+      box-shadow: 1px 0 rgba(36,71,170,.12);
+    }
+
+    .welcome-user {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-left: clamp(24px, 4.5vw, 48px);
+    }
+
+    .welcome-avatar {
+      width: 64px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 64px;
+      border: 3px solid #f7df91;
+      border-radius: 5px;
+      background: radial-gradient(circle at 30% 20%, #ef812d, #a31313 55%, #5d0808);
+      box-shadow: 0 1px 2px rgba(0,0,0,.45);
+    }
+
+    .welcome-avatar span {
+      color: #ffd76d;
+      font: 42px Georgia, serif;
+      line-height: 1;
+      text-shadow: 1px 1px 1px #57100b;
+    }
+
+    .welcome-user-name {
+      color: #f5f7ff;
+      font-size: clamp(18px, 3vw, 26px);
+      font-weight: bold;
+      text-shadow: 1px 2px 1px rgba(38,61,145,.35);
+    }
+
+    .welcome-user-status {
+      margin-top: 5px;
+      color: #173d9a;
+      font-size: clamp(11px, 1.7vw, 14px);
+      font-weight: bold;
+    }
+
+    .welcome-bottom {
+      height: 12.5%;
+      flex: 0 0 12.5%;
+      border-top: 2px solid rgba(255,255,255,.22);
+      background: #2934bd;
+    }
+
+    .login-top {
+      height: 12.5%;
+      min-height: 0;
+      flex: 0 0 12.5%;
+      border-bottom: 2px solid rgba(255,255,255,.18);
+      background: #1f32b3;
+    }
+
+    .xp-wordmark {
+      position: relative;
+      color: #fff;
+      font-size: clamp(26px, 5.5vw, 40px);
+      font-weight: bold;
+      letter-spacing: -2px;
+      text-shadow: 1px 2px 0 rgba(0,0,0,.2);
+    }
+
+    .xp-wordmark .ms {
+      position: absolute;
+      top: -5px;
+      left: 1px;
+      font-size: 7px;
+      font-weight: normal;
+      letter-spacing: 0;
+    }
+
+    .xp-wordmark small {
+      position: absolute;
+      right: -18px;
+      bottom: -2px;
+      color: #ff6b21;
+      font-size: 16px;
+      font-style: italic;
+      letter-spacing: 0;
+    }
+
+    .xp-flags {
+      position: absolute;
+      top: -16px;
+      right: -18px;
+      display: grid;
+      grid-template-columns: 10px 10px;
+      grid-template-rows: 10px 10px;
+      gap: 1px;
+      transform: skewY(-10deg) rotate(-9deg);
+    }
+
+    .login-main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 50% 1px 50%;
+      align-items: center;
+      padding: 0;
+      background: linear-gradient(110deg, #3d84f2 0%, #3d83ee 50%, #2d70df 100%);
+    }
+
+    .login-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+    }
+
+    .login-prompt {
+      margin-top: 35px;
+      color: #fff;
+      font-size: clamp(12px, 2vw, 16px);
+      text-align: center;
+      text-shadow: 1px 1px rgba(0,0,0,.2);
+    }
+
+    .login-divider {
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(transparent, rgba(255,255,255,.16) 8%, rgba(255,255,255,.22) 50%, rgba(255,255,255,.16) 92%, transparent);
+      box-shadow: 1px 0 rgba(35,89,201,.18);
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      justify-self: start;
+      width: min(245px, 91%);
+      min-width: 0;
+      margin-left: clamp(18px, 4vw, 30px);
+      padding: 4px;
+      border: 1px solid rgba(26,70,177,.55);
+      border-radius: 4px;
+      background: linear-gradient(90deg, #4a98fa 0%, #2878e7 55%, #2463c9 100%);
+      box-shadow: 0 1px 2px rgba(0,0,0,.2);
+      color: #fff;
+      font-family: Tahoma, Arial, sans-serif;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .user-card:hover { background: linear-gradient(90deg, #65a7fb 0%, #3789ee 55%, #2d6ed4 100%); }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 36px;
+      border: 2px solid #f8da73;
+      border-radius: 4px;
+      background: radial-gradient(circle at 30% 20%, #ef812d, #a31313 55%, #5d0808);
+      color: #ffd76d;
+      font: 24px Georgia, serif;
+      line-height: 1;
+      text-align: center;
+      text-shadow: 1px 1px 1px #57100b;
+    }
+
+    .user-name { font-size: 13px; font-weight: bold; }
+    .user-hint { display: none; }
+
+    .login-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 12.5%;
+      min-height: 0;
+      flex: 0 0 12.5%;
+      padding: 0 2vw;
+      border-top: 2px solid rgba(255,255,255,.22);
+      background: #2934bd;
+      color: #e1ebff;
+      font-size: 10px;
+    }
+
+    .login-footer strong { color: #fff; }
+
+    .skip-button {
+      position: fixed;
+      right: 8px;
+      bottom: 7px;
+      z-index: 10;
+      padding: 3px 5px;
+      border: 0;
+      background: transparent;
+      color: rgba(197, 193, 193, 0.473);
+      font: 20px Tahoma, sans-serif;
+      cursor: pointer;
+    }
+
+    .skip-button:hover,
+    .skip-button:focus-visible { color: rgba(255,255,255,.75); }
+
+    @media (max-width: 480px) {
+      .login-top { min-height: 25%; }
+      .login-footer { padding: 14px 18px; }
+      .user-card { min-width: 260px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="xp-screen">
+    <section class="xp-screen boot-screen" id="bootScreen" aria-label="Uruchamianie Windows XP">
+      <div class="boot-logo" aria-label="Microsoft Windows XP">
+        <div class="boot-flags" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <span class="microsoft">Microsoft</span>
+        <span class="windows">Windows</span>
+        <span class="xp">xD</span>
+      </div>
+      <div class="boot-progress-frame" aria-label="Ładowanie systemu">
+        <div class="boot-progress-track">
+          <div class="boot-progress-blocks" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+      </div>
+      <div class="boot-status">Uruchamianie systemu...</div>
+    </section>
+
+    <section class="xp-screen login-screen" id="loginScreen" aria-label="Ekran logowania Windows XP">
+      <div class="login-top"></div>
+
+      <div class="login-main">
+        <div class="login-brand">
+          <div class="xp-wordmark">
+            <span class="ms">Microsoft</span>
+            Windows
+            <div class="xp-flags" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <small>xD</small>
+          </div>
+          <div class="login-prompt">To begin, click your user name</div>
+        </div>
+        <div class="login-divider" aria-hidden="true"></div>
+        <button class="user-card" id="userCard" type="button">
+          <div class="user-avatar" aria-hidden="true">
+            <img id="ad-image" style="width: 100%; height: 100%;" src="images/jaja (9).png" alt="Reklama">
+          </div>
+          <div>
+            <div class="user-name">Jędrzej pc</div>
+            <div class="user-hint">Kliknij, aby się zalogować</div>
+          </div>
+        </button>
+      </div>
+
+      <div class="login-footer">
+        <div class="turn-off"><span class="power-icon">⏻</span>Turn off computer</div>
+        <div class="login-footer-note">After you log on, you can add or change accounts.<br>Just go to Control Panel and click User Accounts.</div>
+      </div>
+    </section>
+
+    <section class="xp-screen welcome-screen" id="welcomeScreen" aria-label="Ładowanie ustawień użytkownika">
+      <div class="welcome-top"></div>
+      <div class="welcome-main">
+        <div class="welcome-word">welcome</div>
+        <div class="welcome-divider" aria-hidden="true"></div>
+        <div class="welcome-user">
+          <div class="welcome-avatar" aria-hidden="true"><span><img id="ad-image" style="width: 100%; height: 100%;" src="images/placeholder15.png" alt="Reklama"></span></div>
+          <div>
+            <div class="welcome-user-name">Jędrzej pc</div>
+            <div class="welcome-user-status">Loading your personal settings...</div>
+          </div>
+        </div>
+      </div>
+      <div class="welcome-bottom"></div>
+    </section>
+
+    <!-- Podmień src na własny plik z dźwiękiem logowania Windows XP. -->
+    <audio id="loginSound" preload="auto" src="audio/windows-xp-logon.mp3"></audio>
+
+    <button class="skip-button" id="skipButton" type="button" aria-label="Pomiń ekran uruchamiania">pomiń</button>
+  </main>
+
+  <script>
+    (() => {
+      const bootScreen = document.getElementById("bootScreen");
+      const loginScreen = document.getElementById("loginScreen");
+      const welcomeScreen = document.getElementById("welcomeScreen");
+      const userCard = document.getElementById("userCard");
+      const skipButton = document.getElementById("skipButton");
+      const loginSound = document.getElementById("loginSound");
+      const bootDuration = 3600;
+      const welcomeDuration = 4000;
+      let finished = false;
+      let welcomeTimer = null;
+
+      function showLoginSelection() {
+        if (finished) return;
+        bootScreen.style.display = "none";
+        loginScreen.style.display = "flex";
+        loginScreen.classList.add("visible");
+      }
+
+      function finishSequence() {
+        if (finished) return;
+        finished = true;
+        if (welcomeTimer) window.clearTimeout(welcomeTimer);
+
+        loginSound.pause();
+        loginSound.currentTime = 0;
+        skipButton.style.display = "none";
+
+        window.parent?.postMessage({ type: "xp-login-complete" }, "*");
+        window.parent?.postMessage({ type: "xp-startup-finished" }, "*");
+
+        // Fallback dla uruchomienia pliku samodzielnie — iframe w index.html
+        // powinien ukryć się po odebraniu komunikatu powyżej.
+        document.querySelector(".xp-screen").style.display = "none";
+      }
+
+      function startLogin() {
+        if (finished || welcomeScreen.classList.contains("visible")) return;
+        loginScreen.style.display = "none";
+        welcomeScreen.classList.add("visible");
+
+        loginSound.currentTime = 0;
+        loginSound.play().catch(() => {});
+
+        welcomeTimer = window.setTimeout(finishSequence, welcomeDuration);
+      }
+
+      window.setTimeout(showLoginSelection, bootDuration);
+      userCard.addEventListener("click", startLogin);
+      skipButton.addEventListener("click", finishSequence);
+
+      // Jeśli iframe zostanie ukryty lub zamknięty przez index.html, zatrzymaj dźwięk.
+      window.addEventListener("message", event => {
+        if (event.data?.type === "xp-startup-stop") {
+          loginSound.pause();
+          loginSound.currentTime = 0;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

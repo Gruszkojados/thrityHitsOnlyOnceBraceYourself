@@ -557,7 +557,7 @@
                                                       "children": [
                                                         {
                                                           "name": "KOD:6996.json",
-                                                          "type": "file"
+                                                          "type": "kod"
                                                         }
                                                       ]
                                                     }
@@ -656,7 +656,12 @@
 
     function childrenOf(node) { return Array.isArray(node.children) ? node.children : []; }
     function isFolder(node) { return node.type === "folder" || Array.isArray(node.children); }
-    function iconFor(node) { if (isFolder(node)) return "📁"; const ext = node.name.split(".").pop().toLowerCase(); return ["jpg", "jpeg", "png", "gif"].includes(ext) ? "🖼️" : ext === "mp3" ? "🎵" : "📄"; }
+    function isCode(node) { return node.type === "kod" || Array.isArray(node.children); }
+    function iconFor(node) { 
+      if (isFolder(node)) return "📁"; 
+      if (isCode(node)) return "<b>6996</b>"; 
+      const ext = node.name.split(".").pop().toLowerCase(); 
+      return ["jpg", "jpeg", "png", "gif"].includes(ext) ? "🖼️" : ext === "mp3" ? "🎵" : "📄"; }
     // Zapamiętujemy rodzica każdego folderu iteracyjnie, bez rekurencji.
     function attachParents(rootNode) {
       const stack = [[rootNode, null]];

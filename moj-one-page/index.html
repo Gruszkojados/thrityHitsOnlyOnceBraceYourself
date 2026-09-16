@@ -33,7 +33,9 @@
       font-weight: bold;
     }
 
-    .twenty-code-window .title-text { flex: 1; }
+    .twenty-code-window .title-text {
+      flex: 1;
+    }
 
     .twenty-code-body {
       padding: 20px 18px 12px;
@@ -70,6 +72,33 @@
 </head>
 
 <body>
+
+  <iframe id="xpStartupFrame" src="windows-xp-startup.html" style="
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    z-index: 999999;
+  ">
+  </iframe>
+
+  <script>
+    const xpFrame = document.getElementById("xpStartupFrame");
+
+    window.addEventListener("message", (event) => {
+      if (event.source !== xpFrame.contentWindow) return;
+
+      if (
+        event.data?.type === "xp-login-complete" ||
+        event.data?.type === "xp-startup-finished"
+      ) {
+        xpFrame.remove();
+      }
+    });
+  </script>
+
+
   <div class="desktop">
 
     <!-- =====================================================
@@ -86,7 +115,7 @@
             <button class="win-btn" id="closeButton1">×</button>
           </div>
         </div>
-        
+
         <div class="browser-body">
           <div class="fake-address">http://redtube_normalnie/from_shoe</div>
           <div class="jpg-view"></div>
@@ -157,7 +186,7 @@
           <div class="jpg-view jpg-link"
             onclick="window.open('https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/', '_blank')"></div>
         </div>
-      </div> 
+      </div>
 
       <div class="window bg-browser bg6 saper" id="saperWindow">
         <div class="title-bar">
@@ -197,13 +226,11 @@
             <button class="win-btn paintClose">×</button>
           </div>
         </div>
-        <iframe
-          src="paint-windows-98.html"
-          style="width:400px; height:500px; border:0;">
+        <iframe src="paint-windows-98.html" style="width:400px; height:500px; border:0;">
         </iframe>
       </div>
 
-      
+
 
     </div>
 
@@ -228,8 +255,10 @@
         <span>Kosz</span>
       </div>
       <div class="desktop-icon spawn-trigger" data-source="desktop">
-        <div class="icon">💾</div>
-        <span>Dyskietka 3,5"</span>
+        <div class="icon"><div class="nfspic">
+            <img src="images/winamp.png" alt="Face Spawn">
+          </div></div>
+        <span>Winamp</span>
       </div>
       <div class="desktop-icon cdButton" id="cdButtonId" data-source="desktop">
         <div class="icon">
@@ -290,10 +319,8 @@
             <div>
               <h1>Projekt 96</h1>
               <p>
-                Strona w stylu Windows 96. Dane listy są pobierane
-                dynamicznie z pliku <strong>data.json</strong>. Klikaj
-                ikony systemu, aby wypuszczać na pulpit losowe elementy
-                z Twojej listy.
+                Zainspirowany rychłym wejściem w 30stą jesień, postanowiłem stworzyć memiczno-nostaligiczny projekt, dla was, moich szanownych gości.
+                Znajdziecie tu kilka róznych aktywności, które doprowadzą Was do rozwiązania zagadki. Miłej zabawy i widzimy się na imprezie 😎
               </p>
             </div>
           </div>
@@ -316,11 +343,11 @@
         </div>
       </div>
 
-      <iframe src="need-for-speed-underground-2-installer.html"  class="installer-frame">>
-        </iframe>
+      <iframe src="need-for-speed-underground-2-installer.html" class="installer-frame">>
+      </iframe>
     </div>
 
-    
+
 
     <!-- =====================================================
          LISTA Z data.json
@@ -480,10 +507,13 @@
 
             <b>Co będziemy robić? Czy przygotować się na jakieś aktywności?</b> <br> <br>
             <p>
-              Najwaniejsze abyście się dobrze bawili w gronie znajomych. Bedziemy mogli pograc w gry planszowe, przejść się na spacer itd.
+              Najwaniejsze abyście się dobrze bawili w gronie znajomych. Bedziemy mogli pograc w gry planszowe, przejść
+              się na spacer itd.
               Dobra, a teraz najwazniejsze. Jesli jeszcze nie ogarnąłeś/łaś, cała ta strona jest całkiem interaktywna.
-              Jeden z elementów zawiera pola do aktywacji systemu. Aby otrzymać kody wystarczy odnaleźć je ukryte na tej stronie, większość jest w formie zagadki. 
+              Jeden z elementów zawiera pola do aktywacji systemu. Aby otrzymać kody wystarczy odnaleźć je ukryte na tej
+              stronie, większość jest w formie zagadki.
               A tu łap pierwszy kod: 01PB
+              Polecam zapisywac kody na kartce bo przy odswieżeniu strony, przeglądarka zgubi wszystkie wpisane kody w instalatorze.
               Wpisz kody, aktywuj i zobacz co dalej.
               Miłej zabawy 😉
             </p> <br>
@@ -508,7 +538,9 @@
         </div>
       </div>
 
-      <iframe src="explorer.html" width="100%" height="100%" style="border-left-width: 0px;border-left-style: solid;border-top-width: 0px;border-top-style: solid;border-right-width: 0px;border-right-style: solid;border-bottom-width: 0px;border-bottom-style: solid;" title="File explorer">
+      <iframe src="explorer.html" width="100%" height="100%"
+        style="border-left-width: 0px;border-left-style: solid;border-top-width: 0px;border-top-style: solid;border-right-width: 0px;border-right-style: solid;border-bottom-width: 0px;border-bottom-style: solid;"
+        title="File explorer">
       </iframe>
     </div>
 
@@ -1317,8 +1349,8 @@
         if (item.id === "noteButtonId") { return; }
         if (item.id === "plikiExitId") { return; }
         if (item.id === "paintCloseId") { return; }
-        
-        
+
+
         showStartError(item.querySelector("span:last-child")?.textContent.trim() || item.textContent.trim());
       });
     });

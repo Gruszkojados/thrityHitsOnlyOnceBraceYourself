@@ -153,7 +153,7 @@
       scroll-behavior: smooth;
     }
 
-    .message { margin: 0 0 4px; line-height: 1.22; }
+    .message { margin: 0 0 4px; line-height: 1.22; white-space: pre-line; }
     .message strong { font-weight: bold; }
     .message.system { color: #444; font-style: italic; }
 
@@ -262,7 +262,7 @@
 
     <section class="ad-banner" aria-label="Baner">
       <div class="ad-mamuski">
-        <img src="images/mamuski.png">
+        <img id="ad-image" src="images/mamuski.png" alt="Reklama">
       </div>
     </section>
 
@@ -282,6 +282,7 @@
     <textarea class="message-input" id="message-input" placeholder="Napisz wiadomość..." aria-label="Treść wiadomości"></textarea>
 
     <footer class="actions">
+      <b>Okno zablokowane</b>
       <button class="win98-button wide send-button" id="send-message" type="button">Wyślij</button>
       <button class="win98-button wide" id="clear-message" type="button">Wyczyść</button>
       <button class="win98-button wide" id="close-bottom" type="button">Zamknij</button>
@@ -293,16 +294,72 @@
     const conversation = document.getElementById("conversation");
     const messageInput = document.getElementById("message-input");
     const typing = document.getElementById("typing");
+
     let messageTimers = [];
     let responseIndex = 0;
+    let questions = [];
+    let currentQuestion = null;
+    let usedQuestionIndexes = new Set();
+    let correctAnswers = 0;
+    let quizState = "intro";
 
-    const scriptedMessages = [
-      "Hej! Jesteś już gotowy na wyjazd?",
-      "Mam nadzieję, że tym razem niczego nie zapomnimy 😄"
+    const fallbackQuestions = [
+      {
+        question: "Jaki język służy do tworzenia struktury strony internetowej?",
+        answers: ["HTML", "CSS", "Python", "SQL"],
+        correct: 0
+      },
+      {
+        question: "Ile to jest 2 + 2?",
+        answers: ["3", "4", "5", "6"],
+        correct: 1
+      },
+      {
+        question: "Który system kojarzy się z niebieskim ekranem logowania i przyciskiem Start?",
+        answers: ["Windows XP", "DOS", "Android", "Linux Mint"],
+        correct: 0
+      },
+      {
+        question: "Jak nazywa się popularny polski komunikator przedstawiony w tym oknie?",
+        answers: ["GG", "IRC", "Skype", "ICQ"],
+        correct: 0
+      },
+      {
+        question: "Który zapis oznacza cztery cyfry kodu?",
+        answers: ["ABCD", "1234", "HTML", "GGGG"],
+        correct: 1
+      },
+      {
+        question: "Który element HTML tworzy pole do wpisywania dłuższej wiadomości?",
+        answers: ["<img>", "<audio>", "<textarea>", "<table>"],
+        correct: 2
+      }
     ];
+
+    const correctReactions = [
+      "Dobrze! Takiej odpowiedzi oczekiwałem.",
+      "Zgadza się, punkt dla Ciebie!",
+      "Świetnie, poprawna odpowiedź.",
+      "Dokładnie tak. Lecimy dalej!"
+    ];
+
+    const incorrectReactions = [
+      "Niestety, tym razem nie. Spróbuj przy kolejnym pytaniu.",
+      "Prawie, ale to nie ta odpowiedź.",
+      "Oj, tutaj się nie zgadza. Zapamiętaj poprawną odpowiedź.",
+      "Tym razem pudło 😄 Następne pytanie będzie nowe."
+    ];
+
+    const questionsReady = loadQuestions();
 
     function currentTime() {
       return new Date().toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      }[character]));
     }
 
     function scrollConversation() {
@@ -322,24 +379,127 @@
       scrollConversation();
     }
 
-    function scheduleMessage(text, delay) {
+    function pickRandom(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function normalizeQuestion(raw) {
+      if (!raw || typeof raw !== "object") return null;
+
+      let answers = raw.answers ?? raw.options;
+      if (answers && !Array.isArray(answers) && typeof answers === "object") {
+        answers = [answers.a, answers.b, answers.c, answers.d];
+      }
+      if (!Array.isArray(answers)) answers = [raw.a, raw.b, raw.c, raw.d];
+
+      answers = answers.slice(0, 4).map(answer => {
+        if (answer && typeof answer === "object") return answer.text ?? answer.answer ?? "";
+        return answer ?? "";
+      }).map(String);
+
+      if (answers.length !== 4 || answers.some(answer => !answer.trim())) return null;
+
+      const question = String(raw.question ?? raw.text ?? "").trim();
+      if (!question) return null;
+
+      let correct = raw.correct ?? raw.correctAnswer ?? raw.answer;
+      if (typeof correct === "string") {
+        const value = correct.trim().toLowerCase();
+        if (/^[abcd]$/.test(value)) correct = "abcd".indexOf(value);
+        else if (/^[1-4]$/.test(value)) correct = Number(value) - 1;
+        else correct = answers.findIndex(answer => answer.toLowerCase() === value);
+      }
+      correct = Number(correct);
+
+      if (!Number.isInteger(correct) || correct < 0 || correct > 3) return null;
+      const comment = String(raw.comment ?? raw.komentar ?? raw.explanation ?? "").trim();
+      return { question, answers, correct, comment };
+    }
+
+    async function loadQuestions() {
+      try {
+        const response = await fetch("questions.json", { cache: "no-store" });
+        if (!response.ok) throw new Error("Nie udało się wczytać questions.json");
+        const data = await response.json();
+        const list = Array.isArray(data) ? data : data.questions;
+        questions = Array.isArray(list) ? list.map(normalizeQuestion).filter(Boolean) : [];
+        if (!questions.length) throw new Error("questions.json nie zawiera poprawnych pytań");
+      } catch (error) {
+        // Fallback pozwala uruchomić plik również bez serwera lokalnego.
+        questions = fallbackQuestions.map(normalizeQuestion).filter(Boolean);
+        console.warn("Nie wczytano questions.json — używam pytań awaryjnych.", error);
+      }
+      return questions;
+    }
+
+    function scheduleBotMessage(text, delay = 1500, after = null) {
+      showTyping(true);
       const timer = window.setTimeout(() => {
-        showTyping(true);
-        const replyTimer = window.setTimeout(() => {
-          showTyping(false);
-          addMessage("Gruszkojados", text);
-        }, 2000);
-        messageTimers.push(replyTimer);
+        showTyping(false);
+        addMessage("Gruszkojados", text);
+        if (typeof after === "function") after();
       }, delay);
       messageTimers.push(timer);
+      return timer;
     }
 
     function startConversation() {
       messageTimers.forEach(clearTimeout);
       messageTimers = [];
-      
-      scheduleMessage(scriptedMessages[0], 1000);
-      scheduleMessage(scriptedMessages[1], 3000);
+      // Bot nie rozpoczyna rozmowy sam — czeka na pierwszą wiadomość użytkownika.
+      quizState = "awaiting-first-message";
+    }
+
+    function askNextQuestion() {
+      if (correctAnswers >= 4) return finishQuiz();
+
+      const available = questions
+        .map((question, index) => ({ question, index }))
+        .filter(item => !usedQuestionIndexes.has(item.index));
+
+      if (!available.length) {
+        quizState = "finished";
+        scheduleBotMessage("Nie mam już nowych pytań. Zdobądź cztery poprawne odpowiedzi, aby otrzymać kod.", 1200);
+        return;
+      }
+
+      const selected = pickRandom(available);
+      usedQuestionIndexes.add(selected.index);
+      currentQuestion = selected.question;
+      quizState = "bot-thinking";
+      const options = currentQuestion.answers
+        .map((answer, index) => `${"ABCD"[index]}) ${answer}`)
+        .join("\n");
+      scheduleBotMessage(`Pytanie ${usedQuestionIndexes.size}: ${currentQuestion.question}\n${options}\n\nOdpowiedz jedną literą: A, B, C albo D.`, 1200, () => {
+        quizState = "awaiting-answer";
+      });
+    }
+
+    function finishQuiz() {
+      quizState = "bot-thinking";
+      scheduleBotMessage("Wygląda na to że wiesz o mnie praktycznie wszystko, nie ma sensu męczyć Cie dalej pytaniami. Łap Twój kod: 6769", 1300, () => {
+        quizState = "finished";
+      });
+    }
+
+    function answerQuestion(answerIndex) {
+      if (quizState !== "awaiting-answer" || !currentQuestion) return;
+
+      const question = currentQuestion;
+      const isCorrect = answerIndex === question.correct;
+      quizState = "bot-thinking";
+      addMessage("Ja", `${"ABCD"[answerIndex]}) ${question.answers[answerIndex]}`);
+
+      if (isCorrect) correctAnswers += 1;
+
+      const reaction = isCorrect
+        ? `${pickRandom(correctReactions)}${question.comment ? `\n\n${question.comment}` : ""}`
+        : `${pickRandom(incorrectReactions)} Poprawna odpowiedź: ${"ABCD"[question.correct]}) ${question.answers[question.correct]}`;
+
+      scheduleBotMessage(reaction, 1200, () => {
+        if (correctAnswers >= 4) finishQuiz();
+        else askNextQuestion();
+      });
     }
 
     function chooseReply(text) {
@@ -364,19 +524,62 @@
       return replies[responseIndex++ % replies.length];
     }
 
+    function isPositiveAnswer(text) {
+      return /\b(tak|jasne|pewnie|oczywiście|oczywiscie|możesz|mozesz|dawaj|ok|okej|yes)\b/i.test(text);
+    }
+
     function sendMessage() {
       const text = messageInput.value.trim();
-      if (!text) return;
+      if (!text || quizState === "bot-thinking") return;
 
       addMessage("Ja", text);
       messageInput.value = "";
       messageInput.focus();
-      showTyping(true);
 
-      window.setTimeout(() => {
-        showTyping(false);
-        addMessage("Gruszkojados", chooseReply(text));
-      }, 1500);
+      if (quizState === "awaiting-first-message") {
+        quizState = "bot-thinking";
+        scheduleBotMessage("Cześć, właśnie też miałem do Ciebie napisać.", 900, () => {
+          const nextMessageTimer = window.setTimeout(() => {
+            scheduleBotMessage("Chciałem zrobić Ci krótki quiz, wchodzisz w to?", 800, () => {
+              quizState = "waiting-permission";
+            });
+          }, 2200);
+          messageTimers.push(nextMessageTimer);
+        });
+        return;
+      }
+
+      if (quizState === "awaiting-answer") {
+        const typedAnswer = text.match(/^\s*([abcd])\s*$/i);
+        if (typedAnswer) {
+          answerQuestion("abcd".indexOf(typedAnswer[1].toLowerCase()));
+        } else {
+          scheduleBotMessage("Odpowiedz wyłącznie jedną literą: A, B, C albo D.", 900);
+        }
+        return;
+      }
+
+      if (quizState === "waiting-permission") {
+        quizState = "bot-thinking";
+        if (isPositiveAnswer(text)) {
+          questionsReady.then(() => {
+            scheduleBotMessage("Jasne! Zaczynamy. Odpowiadaj wpisując jedną z czterech liter.", 1200, askNextQuestion);
+          });
+        } else {
+          scheduleBotMessage("Dobrze, rozumiem. Nie zaczynamy jeszcze quizu.", 1200, () => {
+            const retryTimer = window.setTimeout(() => {
+              quizState = "bot-thinking";
+              scheduleBotMessage("To jak, gramy?", 1200, () => {
+                quizState = "waiting-permission";
+              });
+            }, 3000);
+            messageTimers.push(retryTimer);
+          });
+        }
+        return;
+      }
+
+      scheduleBotMessage(chooseReply(text), 1500);
     }
 
     var wasOpened = false;
@@ -401,12 +604,6 @@
       if (window.parent !== window) {
         window.parent.postMessage({ type: "gg-close" }, "*");
       }
-    }
-
-    function escapeHtml(value) {
-      return value.replace(/[&<>"']/g, character => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-      }[character]));
     }
 
     document.getElementById("open-chat").addEventListener("click", openChat);
@@ -453,6 +650,22 @@
       document.getElementById("app-body").classList.add("embedded");
       openChat();
     }
+
+    const adImages = [
+      "images/mamuski.png",
+      "images/faza.png",
+      "images/penis.png",
+      "images/zona.png",
+      "images/lufa.png"
+    ];
+
+    let adIndex = 0;
+
+    setInterval(() => {
+      adIndex = (adIndex + 1) % adImages.length;
+      document.getElementById("ad-image").src = adImages[adIndex];
+    }, 10000);
+
   </script>
 </body>
 </html>

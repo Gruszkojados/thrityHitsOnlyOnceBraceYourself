@@ -301,8 +301,10 @@
 
         <div id="done-page" class="hidden">
           <h1>Instalacja zakończona</h1>
-          <p>Need for Speed Underground 2 Seat Edition zainstalowany pomyślnie.</p>
-          <p>Naciśnij X aby zakończyć.</p>
+          <p>Zasintalowany został program Need for Speed Underground 2 - Wersja imprezowa 🎉🎈🎊</p>
+          <p>Udało Ci się odblokować dodatkową zawartość związaną z moimi urudzinami! Gratulacje! Na miejscu podejdź do mnie i dyskretnie podaj poniższe hasło, a otrzymasz nagrodę.</p>
+          <p>Hasło: "Zwaliłem/łam się w nachy po ciężkiemu"</p>
+          <p>Naciśnij X aby zakończyć. Widzimy się na miejscu! 😉</p>
         </div>
       </section>
     </section>
@@ -327,12 +329,13 @@
       const back = document.getElementById('back-button');
       const cancel = document.getElementById('cancel-button');
       const error = document.getElementById('code-error');
-      const requiredCode = ['1EE7', '2IE7', '01PB', 'BY97', '997P', '55FF', '6996'];
+      const requiredCode = ['1EE7', '2IE7', '01PB', '6769', '997P', '55FF', '6996'];
+      //const requiredCode = ['0000', '0000', '0000', '0000', '0000', '0000', '0000'];
       const components = [
-        'Zbieranie ekipy', 'Wkurzanie Oli', 'Chodzenie piwka',
+        'Zbieranie ekipy', 'Wkurzanie Oli', 'Chłodzenie piwka',
         'Golenie Majkiego', 'Budzenie Remiego',
         'Mleczny Marcin w drodze', 'Bartas liczy kalorie i procenty', 'Krzychu czyści bile',
-        'Czaras rozkłada namiot', 'Pomijanie Cypka'
+        'Czaras rozkłada namiot', 'Ładowanie Cypka'
       ];
       let page = 'welcome';
       let timer;
@@ -365,7 +368,7 @@
         const name = document.getElementById('component-name');
         const line = document.getElementById('component-line');
         timer = setInterval(() => {
-          const progress = Math.min((performance.now() - started) / 60000, 1);
+          const progress = Math.min((performance.now() - started) / 600, 1);
           const value = Math.floor(progress * 100);
           bar.style.width = value + '%';
           percent.textContent = value + '%';

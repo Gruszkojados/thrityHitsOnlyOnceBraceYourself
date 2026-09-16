@@ -1,0 +1,128 @@
+[
+  {
+    "question": "Przy jakiej ulicy mieszkał w Jędras w dziecinstwie?",
+    "answers": ["Ratuszowej", "Roosevelta", "Narutowicza", "Sświetokrzyskiej"],
+    "correct": "b",
+    "comment": "Teraz Ratuszowa, kiedyś jednak Roosevelta."
+  },
+  {
+    "question": "Jaka była moja ulubiona gra z dzieciństwa?",
+    "answers": ["Heroes 3", "CS 1.6", "Praetorians", "Twierdza"],
+    "correct": "c",
+    "comment": "Kto wie ten wie, Praetorians kampania raz do roku jest robiona."
+  },
+  {
+    "question": "Jak nazywała się ulubiona lekcja Jędrka w technikum?",
+    "answers": ["Matematyka", "Śniadaniowa", "Informatyka", "Polski xd"],
+    "correct": "b",
+    "comment": "U pana magistra puchacza."
+  },
+  {
+    "question": "Z czego miałem waruna na studiach, który przeciągnąłem do 3ciego roku?",
+    "answers": ["Algerba u Dowbora", "Dyskretna", "Logika u tego cwela łysego", "Analiza matematyczna"],
+    "correct": "a",
+    "comment": "Tak to były mąż Katarzyny Dowbor od tego programu Nasz nowy dom xd."
+  },
+  {
+    "question": "Jakie było moje ulubione piwo w akadmiku za kaucje z butelek?",
+    "answers": ["Tyskie", "Żubr", "EBE", "Wojak"],
+    "correct": "d",
+    "comment": "Nie dałem Tatry żeby nie było za trudno 🍻"
+  },
+  {
+    "question": "Jaki był mój pierwszy samochód?",
+    "answers": ["Volkswagen Golf IV Hatchback 1.6 100KM 74kW 1999", "Opel", "BMW", "Fiat"],
+    "correct": "a",
+    "comment": "Bogata wersja z dobrym naglosnieniem."
+  },
+  {
+    "question": "W jakim jezyku najczęściej pisze skrypty?",
+    "answers": ["NodeJS", "C++", "Python", "Java"],
+    "correct": "a",
+    "comment": "Jedyny słuszny."
+  },
+  {
+    "question": "Jaka jest moja aktualnie najwieksza zajawka?",
+    "answers": ["Rower", "Gierki", "Bushcraft", "Budowlanka"],
+    "correct": "d",
+    "comment": "Revolution race !"
+  },
+  {
+    "question": "No najbardziej lubie z gryla?",
+    "answers": ["Boczek z biedry, plastry", "Kiebłasa z piersi kurczaka", "Karkówka", "Szaszłyki"],
+    "correct": "a",
+    "comment": "No ale w plastrach nie zawijany xd."
+  },
+  {
+    "question": "Co lubie zbierać?",
+    "answers": ["Guziki", "Znaczki", "Ludziki lego", "Kapsle"],
+    "correct": "c",
+    "comment": "Nie dałem pinów bo by było za trudno XD."
+  },
+  {
+    "question": "Jakiej marki są buty które mam od kilku lat i nie potrafie sie ich pozbyć bo są genialne?",
+    "answers": ["Reebok", "Puma", "Adidas", "Vans"],
+    "correct": "a",
+    "comment": "Ach te Clasiki, szkoda że juz ich nie ma nigdzie."
+  },
+  {
+    "question": "Jakie gacie nosi Jędrek aby wkurzyć Olę?",
+    "answers": ["Sloggy", "Ziki", "Casual Style", "Casual Look"],
+    "correct": "c",
+    "comment": "Legendarne na specjalną okazje, z otworem 🩲"
+  },
+  {
+    "question": "Czym najbardziej Jędrulek lubił bawić się jak był mały?",
+    "answers": ["Siusiakiem", "Lalkami", "żołnierzykami", "Lego"],
+    "correct": "d",
+    "comment": "Lego 🚀"
+  },
+  {
+    "question": "Moje ulubione ciasto?",
+    "answers": ["Pączek", "Sernik", "Dakłas", "Szarlotka"],
+    "correct": "c",
+    "comment": "No tak jakoś wyszło, to wina mamy xd."
+  },
+  {
+    "question": "Ulubiona gra z okresu kilku lat?",
+    "answers": ["DS2", "CS", "KCD 1&2", "Heroski"],
+    "correct": "c",
+    "comment": "Henryczek TOP! ⚔️"
+  },
+  {
+    "question": "Ile kosztował seat a ile utargowałem mniej?",
+    "answers": ["48k - 5k", "50k - 10k", "30k - 2k", "40k - 4k"],
+    "correct": "a",
+    "comment": "Podchwytliwe to było pytanie"
+  },
+  {
+    "question": "Jakimi cyframi kończy się mój pesel XD?",
+    "answers": ["86", "25", "67", "96"],
+    "correct": "d",
+    "comment": "Pewnie jesteś programistą, skoro wiesz że przedostatnia cyfra określa płeć, w moim przypadku nieparzysta hehe 😎"
+  },
+  {
+    "question": "Jaki numer autobusu jeździł bezpośrednio spod mojego domu do technikum?",
+    "answers": ["4", "12", "3", "16"],
+    "correct": "d",
+    "comment": "No 16 jeździłem z dyrekcją xD"
+  },
+  {
+    "question": "Jaką udało mi sie zdobyc range w CS Go w swoim prime?",
+    "answers": ["Legendry Eagle Master", "Supreme", "Global", "Legendary Eagle"],
+    "correct": "c",
+    "comment": "Inaczej bym nie pytał xd"
+  },
+  {
+    "question": "W jakich okolicznościach zdobyłem pierwszą pracę?",
+    "answers": ["Chciałem praktyki na studia", "Darmowy staż w firmie", "Przez bióro karier", "Przez internet"],
+    "correct": "a",
+    "comment": "Taka była teoria xd zostałem na chwilę dłużej w TLM ale mnie maciej wywalil xd"
+  },
+  {
+    "question": "W którym DS mieszkałem?",
+    "answers": ["4", "5", "1", "6"],
+    "correct": "b",
+    "comment": "Pokój 218 <3"
+  }
+]
