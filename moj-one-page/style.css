@@ -318,6 +318,48 @@
       margin-right: 50px;
     }
 
+    .confetti-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.confetti {
+    position: absolute;
+    left: -75px;
+    top: -75px;
+
+    object-fit: contain;
+
+    pointer-events: none;
+
+    animation: confetti-explode 4s ease-out forwards;
+}
+
+@keyframes confetti-explode {
+    0% {
+        transform:
+            translate(0, 0)
+            rotate(var(--rotation));
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translate(var(--x), var(--y))
+            rotate(calc(var(--rotation) + 720deg));
+        opacity: 0;
+    }
+}
+
+    .playYTmem {
+      cursor: pointer;
+    }
+
     .bg7 {
       left: 100px;
       top: 100px;
@@ -328,8 +370,8 @@
     .bg8 {
       left: calc(30% - 200px);
       top: 100px;
-      width: 400px;
-      height: 530px;
+      width: 500px;
+      height: 600px;
     }
 
     /* ---------- okno błędu uruchamianego z menu Start ---------- */

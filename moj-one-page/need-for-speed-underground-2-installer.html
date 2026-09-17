@@ -410,7 +410,6 @@
       cancel.addEventListener('click', () => {
         if (timer) clearInterval(timer);
         show('welcome');
-        inputs.forEach(input => input.value = '');
         error.textContent = '';
         cancel.textContent = 'Cancel';
       });
