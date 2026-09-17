@@ -98,6 +98,23 @@
     });
   </script>
 
+  <div class="map-confirm" id="mapConfirm">
+    <div class="map-confirm-box">
+        <div class="map-confirm-title">
+            Otworzyć mapę google?
+        </div>
+
+        <div class="map-confirm-text">
+            Czy chcesz otworzyć mapę dojazdu na imprezę?
+        </div>
+
+        <div class="map-confirm-buttons">
+            <button id="mapYes">Tak</button>
+            <button id="mapNo">Nie</button>
+        </div>
+    </div>
+</div>
+
 
   <div class="desktop">
 
@@ -183,8 +200,7 @@
         </div>
         <div class="browser-body">
           <div class="fake-address">http://jak dojade na impreze.com</div>
-          <div class="jpg-view jpg-link"
-            onclick="window.open('https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/', '_blank')"></div>
+            <div class="jpg-view jpg-link" id="mapLink"></div>
         </div>
       </div>
 
@@ -321,7 +337,11 @@
               <p>
                 Zainspirowany rychłym wejściem w 30stą jesień, postanowiłem stworzyć memiczno-nostaligiczny projekt, dla was, moich szanownych gości.
                 Znajdziecie tu kilka róznych aktywności, które doprowadzą Was do rozwiązania zagadki. Miłej zabawy i widzimy się na imprezie 😎
-                <br>Koniecznie włącz dźwięk oraz polecam odpalić w full screen F11 dla lepszej immersji xd
+                <br><b>Wymagania:</b><br>
+                - odpal stronkę na PC lub laptopie <br>
+                - koniecznie włącz dźwięk <br>
+                - polecam odpalić w full screen F11 dla lepszej immersji xd <br>
+                ... w innym przypadku, strona służy wyłącznie informacyjnie w kwestii wyjazdu i imprezy.
               </p>
             </div>
           </div>
@@ -1435,38 +1455,55 @@
     // YT sounds
 
     const ytSounds = [
-        "audio/YTmem0.mp3",
-        "audio/YTmem1.mp3",
-        "audio/YTmem2.mp3",
-        "audio/YTmem3.mp3",
-        "audio/YTmem4.mp3",
-        "audio/YTmem5.mp3",
-        "audio/YTmem6.mp3",
-        "audio/YTmem7.mp3",
-        "audio/YTmem8.mp3",
-        "audio/YTmem9.mp3",
-        "audio/YTmem10.mp3",
-        "audio/YTmem11.mp3",
-        "audio/YTmem12.mp3"
-    ].map(src => new Audio(src));
+    "audio/YTmem0.mp3",
+    "audio/YTmem1.mp3",
+    "audio/YTmem2.mp3",
+    "audio/YTmem3.mp3",
+    "audio/YTmem4.mp3",
+    "audio/YTmem5.mp3",
+    "audio/YTmem6.mp3",
+    "audio/YTmem7.mp3",
+    "audio/YTmem8.mp3",
+    "audio/YTmem9.mp3",
+    "audio/YTmem10.mp3",
+    "audio/YTmem11.mp3",
+    "audio/YTmem12.mp3"
+].map(src => new Audio(src));
 
-    function getRandomYTsound() {
-        return ytSounds[Math.floor(Math.random() * ytSounds.length)];
+
+// Kopia dostępnych dźwięków
+  let availableYTSounds = [...ytSounds];
+
+
+  function getRandomYTsound() {
+    // Jeśli wszystkie zostały wykorzystane,
+    // zaczynamy nową rundę
+    if (availableYTSounds.length === 0) {
+      availableYTSounds = [...ytSounds];
     }
+    // Losowy indeks
+    const randomIndex = Math.floor(
+      Math.random() * availableYTSounds.length
+    );
+    // Pobieramy dźwięk
+    const sound = availableYTSounds[randomIndex];
+    // Usuwamy go z dostępnej puli
+    availableYTSounds.splice(randomIndex, 1);
+    return sound;
+  }
 
-    document.querySelectorAll(".playYTmem").forEach(button => {
-        button.addEventListener("click", () => {
-            const sound = getRandomYTsound();
 
-            sound.currentTime = 0;
-            sound.play();
-        });
+  document.querySelectorAll(".playYTmem").forEach(button => {
+    button.addEventListener("click", () => {
+      const sound = getRandomYTsound();
+      sound.currentTime = 0;
+      sound.play();
     });
 
+  });
+
     // Error for start icons
-
     const clickSound = new Audio("audio/errorSound.mp3");
-
     document.querySelectorAll(".showError").forEach(button => {
         button.addEventListener("click", () => {
             clickSound.currentTime = 0;
@@ -1555,6 +1592,28 @@ function createConfetti(event) {
   document.querySelectorAll(".spawn-trigger").forEach(button => {
     button.addEventListener("click", createConfetti);
   });
+
+/// otwieranie mapy
+
+  const mapLink = document.getElementById("mapLink");
+const mapConfirm = document.getElementById("mapConfirm");
+const mapYes = document.getElementById("mapYes");
+const mapNo = document.getElementById("mapNo");
+
+const mapURL = "https://www.google.com/maps/place/Borsk+194,+83-441+Borsk/";
+
+mapLink.addEventListener("click", () => {
+    mapConfirm.style.display = "flex";
+});
+
+mapYes.addEventListener("click", () => {
+    window.open(mapURL, "_blank");
+    mapConfirm.style.display = "none";
+});
+
+mapNo.addEventListener("click", () => {
+    mapConfirm.style.display = "none";
+});
 
   </script>
 </body>

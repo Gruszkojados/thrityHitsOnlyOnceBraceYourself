@@ -1,7 +1,7 @@
 [
   {
     "question": "Przy jakiej ulicy mieszkał w Jędras w dziecinstwie?",
-    "answers": ["Ratuszowej", "Roosevelta", "Narutowicza", "Sświetokrzyskiej"],
+    "answers": ["Ratuszowej", "Roosevelta", "Narutowicza", "Świetokrzyskiej"],
     "correct": "b",
     "comment": "Teraz Ratuszowa, kiedyś jednak Roosevelta."
   },

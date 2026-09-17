@@ -360,6 +360,48 @@
       cursor: pointer;
     }
 
+    .map-confirm {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 99999;
+}
+
+.map-confirm-box {
+    width: 320px;
+    padding: 20px;
+    background: #c0c0c0;
+    border: 3px outset #fff;
+    box-shadow: 5px 5px 0 #000;
+    text-align: center;
+}
+
+.map-confirm-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.map-confirm-text {
+    margin-bottom: 20px;
+}
+
+.map-confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.map-confirm-buttons button {
+    min-width: 80px;
+    padding: 6px 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
     .bg7 {
       left: 100px;
       top: 100px;
@@ -613,6 +655,12 @@
 
     #informacje {
       display: none;
+    }
+
+    @media (max-width: 768px) {
+        #informacje {
+            display: block;
+        }
     }
 
     #paintId {
