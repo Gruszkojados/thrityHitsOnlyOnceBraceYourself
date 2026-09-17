@@ -285,9 +285,19 @@
     .bg2 {
       right: 45px;
       top: 78px;
-      width: 650px;
-      height: 600px;
+      width: 600px;
+      height: 500px;
     }
+
+    .memView {
+    width: 100%;
+    height: 95%;
+    background-image: url("images/mem1.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    cursor: pointer;
+}
 
     .bg3 {
       left: 300px;

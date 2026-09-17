@@ -142,17 +142,18 @@
 
       <div class="window bg-browser bg2" id="bg2">
         <div class="title-bar">
-          <span class="title-icon">🐒</span>
-          <span class="title-text">Dzidka</span>
-          <div class="window-buttons">
-            <button class="win-btn spawn-trigger ">_</button>
-            <button class="win-btn spawn-trigger ">□</button>
-            <button class="win-btn " id="closeButton2">×</button>
-          </div>
+            <span class="title-icon">🐒</span>
+            <span class="title-text">Dzidka</span>
+            <div class="window-buttons">
+                <button class="win-btn spawn-trigger">_</button>
+                <button class="win-btn spawn-trigger">□</button>
+                <button class="win-btn" id="closeButton2">×</button>
+            </div>
         </div>
+
         <div class="browser-body">
-          <div class="fake-address">https://jbzd.com.pl/ulubione</div>
-          <div class="jpg-view"></div>
+            <div class="fake-address">https://jbzd.com.pl/ulubione</div>
+            <div class="memView"></div>
         </div>
       </div>
 
@@ -1614,6 +1615,21 @@ mapYes.addEventListener("click", () => {
 
 mapNo.addEventListener("click", () => {
     mapConfirm.style.display = "none";
+});
+
+// zmiana mema
+const memView = document.querySelector(".memView");
+
+let currentMem = 1;
+
+memView.addEventListener("click", () => {
+    currentMem++;
+
+    if (currentMem > 6) {
+        currentMem = 1;
+    }
+
+    memView.style.backgroundImage = `url("images/mem${currentMem}.png")`;
 });
 
   </script>
