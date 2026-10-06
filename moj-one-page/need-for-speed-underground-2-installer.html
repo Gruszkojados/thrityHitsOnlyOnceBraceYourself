@@ -368,7 +368,7 @@
         const name = document.getElementById('component-name');
         const line = document.getElementById('component-line');
         timer = setInterval(() => {
-          const progress = Math.min((performance.now() - started) / 600, 1);
+          const progress = Math.min((performance.now() - started) / 60000, 1);
           const value = Math.floor(progress * 100);
           bar.style.width = value + '%';
           percent.textContent = value + '%';
